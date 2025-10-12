@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج وش فوندي</title>
+    <style>
+        /* أنماط اللودر (شاشة التحميل) */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader-logo {
+            font-size: 3em;
+            font-weight: bold;
+            color: #0056b3;
+            animation: pulse 1.5s infinite alternate;
+            position: relative;
+        }
+
+        .loader-logo::after {
+            content: "Sigma";
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: #f44336;
+            clip-path: inset(0 50% 0 0);
+        }
+
+        @keyframes pulse {
+            from { transform: scale(0.9); opacity: 0.7; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* أنماط رسالة التأكيد المخصصة */
+        #confirmation-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745; 
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #confirmation-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* الأنماط العامة للصفحة */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            font-size: 16px; 
+        }
+
+        .container {
+            max-width: 900px;
+            min-width: 300px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        /* أنماط الطباعة النهائية (الأهم) */
+        @media print {
+            /* إخفاء شريط التمرير وكل العناصر غير الضرورية */
+            body, .container {
+                overflow: hidden !important; 
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .container {
+                box-shadow: none !important;
+                border: none !important;
+            }
+            /* إخفاء جميع عناصر التحكم غير الضرورية */
+            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info {
+                display: none !important;
+            }
+            /* إظهار الشعار المخصص للطباعة وتأكيد مظهره النظيف */
+            .logo-placeholder.printable {
+                display: block !important;
+                border: none !important;
+                background-color: transparent !important;
+            }
+            /* إزالة الفواصل غير الضرورية */
+            .header {
+                border-bottom: 3px solid #0056b3 !important;
+                justify-content: space-between;
+            }
+            .header > div:last-child {
+                display: none;
+            }
+            /* حذف كلمة "نموذج" من العنوان في الطباعة */
+            .main-title::before {
+                content: "";
+            }
+            .main-title {
+                white-space: nowrap;
+            }
+             /* ضمان عرض الجدول كاملاً بلا تمرير */
+            .table-wrapper {
+                overflow: visible !important;
+            }
+            /* إخفاء نقاط التوقيع الإضافية التي تظهر في وضع التحرير فقط */
+            .signature-box .signature-name-line {
+                 border-bottom: none !important;
+                 height: auto !important;
+            }
+            /* ضبط شكل التوقيع النهائي في الطباعة */
+            .final-signature-container {
+                justify-content: center !important;
+            }
+            .final-signature-container .signature-box {
+                flex-basis: 70% !important;
+            }
+        }
+        
+        /* رأس النموذج والشعار */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            flex-shrink: 0;
+        }
+        
+        #logo-control {
+            border: 1px dashed #999;
+            order: 1; 
+            text-align: center;
+            line-height: 80px;
+            font-size: 12px;
+        }
+
+        .logo-placeholder.printable {
+            display: none;
+            order: 1;
+        }
+
+        .main-title {
+            color: #0056b3;
+            font-size: 26px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+            order: 2;
+            padding: 0 10px;
+        }
+        .main-title[contenteditable="true"]::before {
+            content: "نموذج "; 
+            color: #0056b3;
+        }
+
+        /* معلومات أساسية */
+        .info-section {
+            display: flex;
+            /* توزيع العناصر بالتساوي */
+            justify-content: space-between; 
+            margin-bottom: 20px;
+            font-size: 15px;
+            flex-wrap: wrap; 
+        }
+        .info-section > div {
+             flex-basis: 48%; 
+             margin: 5px 0;
+        }
+        
+        @media (max-width: 600px) {
+            .info-section > div {
+                flex-basis: 100%; 
+            }
+        }
+
+        /* جدول البيانات */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            min-width: 900px; /* زيادة العرض لاستيعاب حقول التوقيع الإضافية */
+            border-collapse: collapse; 
+            margin-bottom: 10px; 
+            font-size: 13px;
+        }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
+        th { background-color: #f2f2f2; color: #333; }
+        td[contenteditable="true"]:focus, span[contenteditable="true"]:focus { outline: 2px solid #0056b3; }
+
+        .delete-btn { background-color: #f44336; color: white; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; }
+
+        /* قسم التوقيعات */
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+            flex-wrap: wrap;
+        }
+        /* لتوقيع مسؤول الضم وحده */
+        .final-signature-container {
+            display: flex;
+            justify-content: flex-end; /* لجعله يظهر في النهاية */
+            margin-top: 30px;
+            border-top: 1px dashed #ccc;
+            padding-top: 15px;
+        }
+        .signature-box {
+            flex-basis: 45%;
+            margin: 10px 0;
+            text-align: center;
+            font-size: 13px;
+        }
+        .final-signature-container .signature-box {
+            flex-basis: 40%; 
+        }
+
+        .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 150px; }
+        .role-name { font-weight: bold; cursor: text; }
+        .signature-name-line { 
+            height: 1px; 
+            border-bottom: 1px dotted #333; 
+            margin: 5px auto 0; 
+            width: 180px; 
+            min-height: 15px; 
+        }
+
+        /* عناصر التحكم */
+        .controls { text-align: center; margin-top: 20px; padding: 10px; }
+        .controls button { 
+            background-color: #0056b3; color: white; border: none; padding: 8px 15px; 
+            font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 4px;
+            flex-grow: 1;
+        }
+        .controls button.save-button { background-color: #28a745; }
+        
+        /* معلومات المطور */
+        #developer-info {
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+    </style>
+</head>
+<body onload="hideLoader()">
+
+    <div id="loader" class="loader-container">
+        <div class="loader-logo">Sigma</div>
+    </div>
+    
+    <div id="confirmation-message">
+        <span id="message-icon">✅</span> 
+        <span id="message-text"></span>
+    </div>
+
+    <div class="container">
+
+        <div class="header">
+            <div id="logo-control" class="logo-placeholder">
+                <button id="logo-upload-button" title="اضغط لتحميل شعار الشركة" style="all: unset; cursor: pointer; display: block; height: 100%; width: 100%; line-height: 80px; font-size: 12px; color: #333;">تحميل شعار</button>
+            </div>
+            <div class="logo-placeholder printable" id="printable-logo"></div>
+            
+            <h1 class="main-title" contenteditable="true">وش فوندي</h1>
+            <div style="width: 80px; height: 80px; order: 3; flex-shrink: 0;"></div>
+        </div>
+
+        <div class="info-section">
+            <div>
+                التاريخ: <span contenteditable="true" id="current-date">DD / MM / YYYY</span>
+            </div>
+            <div>
+                رقم النموذج: <span contenteditable="true">#</span>
+            </div>
+            <div></div> 
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>م</th>
+                        <th>الموديل</th>
+                        <th>اللون</th>
+                        <th>العدد</th>
+                        <th>اسم المفصل</th>
+                        <th>توقيع المفصل</th>
+                        <th>اسم المكنجي</th>
+                        <th>توقيع المكنجي</th>
+                        <th class="delete-column">حذف</th>
+                    </tr>
+                </thead>
+                <tbody id="materials-table-body">
+                    </tbody>
+            </table>
+                        <div>
+                            إجمالي عدد الطرايح: <span contenteditable="true"></span>
+                        </div>
+        </div>
+
+        <div class="final-signature-container">
+            <div class="signature-box">
+                <span class="role-name" contenteditable="true">مسؤول الضم (استلام الإنتاج)</span>
+                <div class="signature-line"></div>
+                <div class="signature-name-line"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button id="add-row-button">إضافة صف جديد</button>
+        <button class="save-button" onclick="confirmAndPrintPreparation()">تأكيد البيانات قبل الطباعة</button>
+        <button onclick="window.print()" id="print-button" disabled>طباعة النموذج</button>
+    </div>
+
+    <div id="developer-info">
+        Made by Mahmoud Hamed | Copyright © 2025
+    </div>
+
+    <script>
+        let isConfirmed = false;
+        const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg'; 
+        const DEFAULT_ROW_COUNT = 10;
+        let loaderTimeout;
+
+        // دالة لإخفاء اللودر عند تحميل الصفحة
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.visibility = 'hidden';
+                initializeTableRows(); 
+            }, 500);
+        }
+
+        // دالة لتهيئة 10 صفوف فارغة
+        function initializeTableRows() {
+            const tableBody = document.getElementById('materials-table-body');
+            // التأكد من أن الجدول فارغ قبل البدء
+            tableBody.innerHTML = ''; 
+            for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
+                const newRow = tableBody.insertRow();
+                newRow.innerHTML = `
+                    <td contenteditable="true" class="serial-number">${i + 1}</td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td></td>
+                    <td contenteditable="true"></td>
+                    <td></td>
+                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+                `;
+            }
+        }
+
+        // دالة لإظهار رسالة التأكيد المخصصة
+        function showConfirmationMessage(message) {
+            const messageElement = document.getElementById('confirmation-message');
+            document.getElementById('message-text').textContent = message;
+            messageElement.classList.add('show');
+            
+            setTimeout(() => {
+                messageElement.classList.remove('show');
+            }, 3000);
+        }
+
+        // دالة لتعيين الشعار الافتراضي
+        function setDefaultLogo() {
+            const logoControl = document.getElementById('logo-control');
+            const printableLogo = document.getElementById('printable-logo');
+            
+            logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+            logoControl.style.border = 'none';
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; 
+            
+            printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+
+            logoControl.style.display = 'block'; 
+            printableLogo.style.display = 'none'; 
+        }
+
+        // دالة للحفظ والتأكيد قبل الطباعة
+        function confirmAndPrintPreparation() {
+            const loader = document.getElementById('loader');
+            
+            // 1. إظهار لودر Sigma للتأكيد
+            loader.style.visibility = 'visible';
+            loader.style.opacity = '1';
+
+            // محاكاة عملية التأكيد (تأخير لمدة ثانية واحدة)
+            loaderTimeout = setTimeout(() => {
+                isConfirmed = true;
+                
+                // 2. تفعيل زر الطباعة
+                document.getElementById('print-button').disabled = false;
+                document.getElementById('print-button').textContent = 'طباعة النموذج';
+
+                // 3. إخفاء اللودر
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.visibility = 'hidden';
+                }, 500);
+
+                // 4. عرض رسالة التأكيد المخصصة
+                showConfirmationMessage(`تم تأكيد البيانات. يمكنك الآن الطباعة.`);
+                
+            }, 1000); 
+        }
+
+        // دالة لإعادة ترقيم الصفوف بعد الحذف أو الإضافة
+        function renumberRows() {
+            const serialNumbers = document.querySelectorAll('.serial-number');
+            serialNumbers.forEach((cell, index) => {
+                cell.textContent = index + 1;
+            });
+        }
+
+        // دالة لحذف صف من الجدول
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            renumberRows();
+            
+            // إلغاء التأكيد إذا أصبح الجدول فارغًا تمامًا
+            if (document.getElementById('materials-table-body').rows.length === 0) {
+                isConfirmed = false;
+                document.getElementById('print-button').disabled = true;
+                document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
+            }
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            setDefaultLogo();
+            
+            // تهيئة التاريخ
+            const dateSpan = document.getElementById('current-date');
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            dateSpan.textContent = `${day} / ${month} / ${year}`;
+            
+            // دالة إضافة صف جديد
+            document.getElementById('add-row-button').addEventListener('click', () => {
+                const tableBody = document.getElementById('materials-table-body');
+                const rowCount = tableBody.rows.length;
+                const newRow = tableBody.insertRow();
+                
+                const newIndex = rowCount + 1;
+
+                newRow.innerHTML = `
+                    <td contenteditable="true" class="serial-number">${newIndex}</td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td></td>
+                    <td contenteditable="true"></td>
+                    <td></td>
+                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+                `;
+                renumberRows();
+            });
+
+            // دالة تحميل شعار جديد
+            document.getElementById('logo-upload-button').addEventListener('click', () => {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const base64Image = event.target.result;
+                            const logoControl = document.getElementById('logo-control');
+                            const printableLogo = document.getElementById('printable-logo');
+                            
+                            logoControl.style.backgroundImage = `url(${base64Image})`;
+                            printableLogo.style.backgroundImage = `url(${base64Image})`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                fileInput.click();
+            });
+
+            // تعطيل زر الطباعة بشكل مبدئي
+            document.getElementById('print-button').disabled = true;
+            document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
+        });
+    </script>
+
+</body>
+</html>
