@@ -91,6 +91,11 @@
 
         /* أنماط الطباعة النهائية (الأهم) */
         @media print {
+            /* إعدادات الطباعة الأساسية لضمان أفضل تنسيق على A4 */
+            @page {
+                size: A4 portrait;
+                margin: 1cm;
+            }
             /* إخفاء شريط التمرير وكل العناصر غير الضرورية */
             body, .container {
                 overflow: hidden !important; 
@@ -100,16 +105,19 @@
             .container {
                 box-shadow: none !important;
                 border: none !important;
+                width: 100%; 
+                max-width: 100%;
+            }
+            .table-wrapper {
+                overflow: visible !important;
             }
             /* إخفاء جميع عناصر التحكم غير الضرورية */
-            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info {
+            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info, .link-to-funde {
                 display: none !important;
             }
-            /* إظهار الشعار المخصص للطباعة وتأكيد مظهره النظيف */
+            /* إظهار الشعار المخصص للطباعة */
             .logo-placeholder.printable {
                 display: block !important;
-                border: none !important;
-                background-color: transparent !important;
             }
             /* إزالة الفواصل غير الضرورية */
             .header {
@@ -119,18 +127,50 @@
             .header > div:last-child {
                 display: none;
             }
-            /* حذف كلمة "نموذج" من العنوان في الطباعة */
             .main-title::before {
                 content: "";
             }
             .main-title {
                 white-space: nowrap;
             }
-             /* ضمان عرض الجدول كاملاً بلا تمرير */
-            .table-wrapper {
-                overflow: visible !important;
+            
+            /* تنسيق الجدول للطباعة */
+            table {
+                width: 100% !important;
+                min-width: 100% !important;
+                table-layout: fixed; 
             }
-            /* إخفاء نقاط التوقيع الإضافية التي تظهر في وضع التحرير فقط */
+            th, td {
+                padding: 4px 2px;
+                font-size: 11px;
+                white-space: normal;
+                word-wrap: break-word; 
+            }
+            /* تحديد عرض الأعمدة لضمان التناسب في الطباعة */
+            td:nth-child(1), th:nth-child(1) { width: 4%; } /* م */
+            td:nth-child(2), th:nth-child(2) { width: 15%; } /* الموديل */
+            td:nth-child(3), th:nth-child(3) { width: 12%; } /* المقاس */
+            td:nth-child(6), th:nth-child(6) { width: 15%; } /* توقيع المفصل */
+
+            /* تنسيق صف الإجمالي في الطباعة */
+            .total-row-container {
+                border-top: 2px solid #333 !important; 
+                padding-top: 10px !important; 
+                margin-top: 5px !important; 
+                text-align: right !important; 
+                font-size: 14px !important;
+                font-weight: bold !important;
+            }
+            .total-row-container span {
+                display: inline !important;
+                padding: 0 !important;
+                border: none !important;
+                background-color: transparent !important;
+                min-width: auto !important;
+                text-align: right !important;
+            }
+            
+            /* توقيعات النهاية */
             .signature-box .signature-name-line {
                  border-bottom: none !important;
                  height: auto !important;
@@ -180,15 +220,15 @@
             padding: 0 10px;
         }
         .main-title[contenteditable="true"]::before {
-            content: "نموذج "; /* إضافة كلمة "نموذج" في وضع التحرير فقط */
+            content: "نموذج "; 
             color: #0056b3;
         }
 
         /* معلومات أساسية */
         .info-section {
             display: flex;
-            justify-content: flex-start; /* تغيير ليتناسب مع عنصر واحد فقط */
-            gap: 50px; /* تباعد بين العناصر */
+            justify-content: flex-start; 
+            gap: 50px; 
             margin-bottom: 20px;
             font-size: 15px;
             flex-wrap: wrap; 
@@ -215,6 +255,23 @@
 
         .delete-btn { background-color: #f44336; color: white; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; }
 
+        /* صف الإجمالي */
+        .total-row-container {
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-bottom: 20px;
+            text-align: right; /* محاذاة النص لليمين */
+        }
+        .total-row {
+            font-size: 16px;
+            font-weight: bold;
+            display: inline-block; 
+            background-color: #e9e9e9;
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+
+
         /* قسم التوقيعات */
         .signatures {
             display: flex;
@@ -234,10 +291,10 @@
         .role-name { font-weight: bold; cursor: text; }
         .signature-name-line { 
             height: 1px; 
-            border-bottom: 1px dotted #333; /* خط منقط مكان الاسم */
+            border-bottom: 1px dotted #333; 
             margin: 5px auto 0; 
             width: 180px; 
-            min-height: 15px; /* مساحة مناسبة للكتابة */
+            min-height: 15px; 
         }
 
         /* عناصر التحكم */
@@ -258,30 +315,8 @@
             padding-top: 10px;
             border-top: 1px dashed #ccc;
         }
-
-        /* استعلامات الوسائط (Media Queries) */
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 15px; }
-            .header { flex-direction: column; text-align: center; }
-            .logo-placeholder { order: 1; margin-bottom: 10px; }
-            .main-title { order: 2; font-size: 22px; padding: 0; margin-bottom: 15px; }
-            .header > div:last-child { display: none; }
-            .info-section { flex-direction: column; align-items: flex-start; }
-            .signatures { flex-direction: column; }
-            .signature-box { flex-basis: 100%; }
-            .controls { display: flex; flex-direction: column; }
-            .controls button { width: 100%; margin: 5px 0; }
-        }
-        
-        @media (min-width: 601px) and (max-width: 900px) {
-            .container { padding: 20px; }
-            .info-section { font-size: 14px; }
-            .main-title { font-size: 24px; }
-        }
     </style>
 </head>
-    <a href="نموذج-استلام-فوندي.html" target="_blanck">نموذج استلام الفوندي<a/>
 <body onload="hideLoader()">
 
     <div id="loader" class="loader-container">
@@ -317,7 +352,7 @@
                     <tr>
                         <th>م</th>
                         <th>الموديل</th>
-                        <th>اللون</th>
+                        <th>المقاس</th> <th>اللون</th>
                         <th>الكمية المسلمة (رقم)</th>
                         <th>اسم المفصل (العامل)</th>
                         <th>توقيع المفصل</th>
@@ -326,10 +361,13 @@
                 </thead>
                 <tbody id="materials-table-body">
                     </tbody>
-                   <div>
-                            إجمالي عدد الطرايح: <span contenteditable="true"></span>
-                        </div>
             </table>
+        </div>
+        
+        <div class="total-row-container">
+            <div class="total-row">
+                إجمالي عدد الطرايح فقط
+            </div>
         </div>
 
         <div class="signatures">
@@ -339,6 +377,7 @@
                 <div class="signature-line"></div>
                 <div class="signature-name-line"></div>
             </div>
+            
             <div class="signature-box">
                 <span class="role-name" contenteditable="true">مسؤول الضم (استلام الإنتاج)</span>
                 <div class="signature-line"></div>
@@ -370,19 +409,20 @@
             loader.style.opacity = '0';
             setTimeout(() => {
                 loader.style.visibility = 'hidden';
-                initializeTableRows(); // تهيئة الصفوف الافتراضية هنا
+                initializeTableRows(); 
             }, 500);
         }
 
         // دالة لتهيئة 10 صفوف فارغة
         function initializeTableRows() {
             const tableBody = document.getElementById('materials-table-body');
+            tableBody.innerHTML = ''; // التأكد من الإفراغ قبل التعبئة
             for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
                 const newRow = tableBody.insertRow();
                 newRow.innerHTML = `
                     <td contenteditable="true" class="serial-number">${i + 1}</td>
                     <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td> <td contenteditable="true"></td>
                     <td contenteditable="true" class="quantity-input"></td>
                     <td contenteditable="true"></td>
                     <td></td>
@@ -489,7 +529,7 @@
                 newRow.innerHTML = `
                     <td contenteditable="true" class="serial-number">${newIndex}</td>
                     <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td> <td contenteditable="true"></td>
                     <td contenteditable="true" class="quantity-input"></td>
                     <td contenteditable="true"></td>
                     <td></td>
@@ -529,6 +569,3 @@
 
 </body>
 </html>
-
-
-
