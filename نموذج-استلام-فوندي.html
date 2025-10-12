@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج وش فوندي</title>
+    <title>نموذج وش فوندي مفصلين</title>
     <style>
         /* أنماط اللودر (شاشة التحميل) */
         .loader-container {
@@ -91,7 +91,11 @@
 
         /* أنماط الطباعة النهائية (الأهم) */
         @media print {
-            /* إخفاء شريط التمرير وكل العناصر غير الضرورية */
+            /* إعدادات الطباعة الأساسية لضمان أفضل تنسيق على A4 */
+            @page {
+                size: A4 portrait;
+                margin: 1cm;
+            }
             body, .container {
                 overflow: hidden !important; 
                 margin: 0 !important;
@@ -100,47 +104,55 @@
             .container {
                 box-shadow: none !important;
                 border: none !important;
+                width: 100%; 
+                max-width: 100%;
             }
-            /* إخفاء جميع عناصر التحكم غير الضرورية */
+            /* إخفاء عناصر التحكم */
             .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info {
                 display: none !important;
             }
-            /* إظهار الشعار المخصص للطباعة وتأكيد مظهره النظيف */
+            /* إعدادات الشعار والعنوان */
             .logo-placeholder.printable {
                 display: block !important;
-                border: none !important;
-                background-color: transparent !important;
             }
-            /* إزالة الفواصل غير الضرورية */
-            .header {
-                border-bottom: 3px solid #0056b3 !important;
-                justify-content: space-between;
-            }
-            .header > div:last-child {
-                display: none;
-            }
-            /* حذف كلمة "نموذج" من العنوان في الطباعة */
             .main-title::before {
-                content: "";
+                content: ""; /* إزالة كلمة "نموذج" من العنوان في الطباعة */
             }
             .main-title {
-                white-space: nowrap;
+                font-size: 22px !important; 
+                padding: 0;
+                margin: 0;
             }
-             /* ضمان عرض الجدول كاملاً بلا تمرير */
+            /* ضبط الجدول ليتناسب مع الصفحة */
             .table-wrapper {
                 overflow: visible !important;
+                /* تحديد عرض الخانات لضمان عدم تجاوز الجدول للصفحة */
             }
-            /* إخفاء نقاط التوقيع الإضافية التي تظهر في وضع التحرير فقط */
-            .signature-box .signature-name-line {
-                 border-bottom: none !important;
-                 height: auto !important;
+            table {
+                width: 100% !important;
+                min-width: 100% !important;
+                table-layout: fixed; /* لتوزيع الأعمدة بالتساوي */
             }
-            /* ضبط شكل التوقيع النهائي في الطباعة */
+            th, td {
+                padding: 4px 2px;
+                font-size: 11px;
+                white-space: normal; /* السماح بتعدد الأسطر في خلايا العناوين الطويلة */
+            }
+            /* تحديد عرض أعمدة محددة لتقليل التجاوز */
+            td:nth-child(1), th:nth-child(1) { width: 5%; } /* م */
+            td:nth-child(2), th:nth-child(2) { width: 25%; } /* تسليم جلد... */
+            td:nth-child(7), th:nth-child(7) { width: 12%; } /* توقيع المفصل */
+            /* توقيعات النهاية */
             .final-signature-container {
-                justify-content: center !important;
+                border-top: none !important;
+                padding-top: 10px !important;
             }
             .final-signature-container .signature-box {
-                flex-basis: 70% !important;
+                flex-basis: 48% !important; 
+            }
+            .signature-name-line {
+                 border-bottom: none !important;
+                 min-height: 10px;
             }
         }
         
@@ -187,14 +199,13 @@
             padding: 0 10px;
         }
         .main-title[contenteditable="true"]::before {
-            content: "نموذج "; 
+            content: ""; 
             color: #0056b3;
         }
 
         /* معلومات أساسية */
         .info-section {
             display: flex;
-            /* توزيع العناصر بالتساوي */
             justify-content: space-between; 
             margin-bottom: 20px;
             font-size: 15px;
@@ -217,7 +228,7 @@
         }
         table {
             width: 100%;
-            min-width: 900px; /* زيادة العرض لاستيعاب حقول التوقيع الإضافية */
+            min-width: 900px; 
             border-collapse: collapse; 
             margin-bottom: 10px; 
             font-size: 13px;
@@ -229,30 +240,20 @@
         .delete-btn { background-color: #f44336; color: white; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; }
 
         /* قسم التوقيعات */
-        .signatures {
+        .final-signature-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-around; 
             margin-top: 30px;
             border-top: 1px dashed #ccc;
             padding-top: 15px;
             flex-wrap: wrap;
         }
-        /* لتوقيع مسؤول الضم وحده */
-        .final-signature-container {
-            display: flex;
-            justify-content: flex-end; /* لجعله يظهر في النهاية */
-            margin-top: 30px;
-            border-top: 1px dashed #ccc;
-            padding-top: 15px;
-        }
+        
         .signature-box {
-            flex-basis: 45%;
+            flex-basis: 45%; 
             margin: 10px 0;
             text-align: center;
             font-size: 13px;
-        }
-        .final-signature-container .signature-box {
-            flex-basis: 40%; 
         }
 
         .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 150px; }
@@ -285,7 +286,6 @@
         }
     </style>
 </head>
-    <a href="index.html" target="_blanck">نموذج استلام الفرش</a>
 <body onload="hideLoader()">
 
     <div id="loader" class="loader-container">
@@ -305,7 +305,7 @@
             </div>
             <div class="logo-placeholder printable" id="printable-logo"></div>
             
-            <h1 class="main-title" contenteditable="true">وش فوندي</h1>
+            <h1 class="main-title" contenteditable="true">نموذج وش فوندي مفصلين</h1>
             <div style="width: 80px; height: 80px; order: 3; flex-shrink: 0;"></div>
         </div>
 
@@ -316,6 +316,7 @@
             <div>
                 رقم النموذج: <span contenteditable="true">#</span>
             </div>
+
             <div></div> 
         </div>
 
@@ -324,22 +325,18 @@
                 <thead>
                     <tr>
                         <th>م</th>
+                        <th style="min-width: 150px;">تسليم جلد أو بطانة أو فرش</th>
                         <th>الموديل</th>
                         <th>اللون</th>
                         <th>العدد</th>
                         <th>اسم المفصل</th>
                         <th>توقيع المفصل</th>
-                        <th>اسم المكنجي</th>
-                        <th>توقيع المكنجي</th>
                         <th class="delete-column">حذف</th>
                     </tr>
                 </thead>
                 <tbody id="materials-table-body">
                     </tbody>
             </table>
-                        <div>
-                            إجمالي عدد الطرايح: <span contenteditable="true"></span>
-                        </div>
         </div>
 
         <div class="final-signature-container">
@@ -348,8 +345,16 @@
                 <div class="signature-line"></div>
                 <div class="signature-name-line"></div>
             </div>
+            
+            <div class="signature-box">
+                <span class="role-name" contenteditable="true">مسؤول قسم الفوندي</span>
+                <div class="signature-line"></div>
+                <div class="signature-name-line"></div>
+            </div>
         </div>
-
+            <div>
+                إجمالي عدد الطرايح: <span contenteditable="true"></span>
+            </div>
     </div>
 
     <div class="controls">
@@ -391,7 +396,6 @@
                     <td contenteditable="true"></td>
                     <td contenteditable="true"></td>
                     <td contenteditable="true"></td>
-                    <td></td>
                     <td contenteditable="true"></td>
                     <td></td>
                     <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
@@ -501,7 +505,6 @@
                     <td contenteditable="true"></td>
                     <td contenteditable="true"></td>
                     <td contenteditable="true"></td>
-                    <td></td>
                     <td contenteditable="true"></td>
                     <td></td>
                     <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
