@@ -49,36 +49,19 @@
             padding: 20px;
             background-color: #f4f4f4;
             color: #333;
+            /* حجم الخط الأساسي */
+            font-size: 16px; 
         }
 
         .container {
             max-width: 900px;
+            min-width: 300px; /* ضمان حد أدنى للعرض */
             margin: 0 auto;
             background: #fff;
             padding: 30px;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* أنماط الطباعة */
-        @media print {
-            /* إخفاء أزرار التحكم وعمود الحذف عند الطباعة */
-            .controls, #logo-control, .delete-column, .save-button {
-                display: none !important;
-            }
-            /* إظهار الشعار المخصص للطباعة فقط */
-            .logo-placeholder.printable {
-                display: block !important;
-                border: none !important;
-                background-color: transparent !important;
-            }
-            /* التأكد من أن العنوان في المنتصف في الطباعة */
-            .header {
-                justify-content: center;
-            }
-            .header > div:last-child {
-                display: none;
-            }
+            overflow-x: auto; /* مهم للجدول على الشاشات الصغيرة */
         }
 
         /* رأس النموذج والشعار */
@@ -89,39 +72,39 @@
             margin-bottom: 20px;
             border-bottom: 3px solid #0056b3;
             padding-bottom: 10px;
+            flex-wrap: wrap; /* السماح بلف العناصر على شاشات صغيرة */
         }
 
         .logo-placeholder {
-            width: 100px;
-            height: 100px;
+            width: 80px; /* تصغير حجم الشعار قليلاً */
+            height: 80px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
+            flex-shrink: 0; /* منع الشعار من الانكماش */
         }
         
-        /* هذا هو الشعار الذي يظهر في وضع التحرير */
         #logo-control {
             border: 1px dashed #999;
             order: 1; 
             text-align: center;
-            line-height: 100px;
+            line-height: 80px; /* يتوافق مع ارتفاع الشعار */
             font-size: 12px;
         }
 
-        /* هذا هو الشعار الذي يظهر في الطباعة فقط */
         .logo-placeholder.printable {
-            display: none; /* إخفاؤه في وضع العرض العادي */
+            display: none; 
             order: 1;
         }
 
-
         .main-title {
             color: #0056b3;
-            font-size: 28px;
+            font-size: 26px; /* تصغير حجم العنوان قليلاً */
             font-weight: bold;
             flex-grow: 1;
             text-align: center;
             order: 2;
+            padding: 0 10px;
         }
 
         /* معلومات أساسية */
@@ -129,7 +112,12 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
-            font-size: 16px;
+            font-size: 15px;
+            flex-wrap: wrap; 
+        }
+        .info-section div {
+             min-width: 150px; /* ضمان قراءة النص */
+             margin: 5px 0;
         }
         #total-received {
             font-weight: bold;
@@ -137,39 +125,105 @@
         }
 
         /* جدول البيانات */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 15px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        table {
+            width: 100%;
+            min-width: 700px; /* للحفاظ على تنسيق الجدول */
+            border-collapse: collapse; 
+            margin-bottom: 10px; 
+            font-size: 14px; /* تصغير الخط داخل الجدول */
+        }
+        th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
         th { background-color: #f2f2f2; color: #333; }
         td[contenteditable="true"]:focus, span[contenteditable="true"]:focus { outline: 2px solid #0056b3; }
 
-        .delete-btn { background-color: #f44336; color: white; border: none; padding: 5px 10px; font-size: 12px; cursor: pointer; border-radius: 3px; }
-        .delete-btn:hover { background-color: #da190b; }
+        .delete-btn { background-color: #f44336; color: white; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; }
 
         /* قسم التوقيعات */
         .signatures {
             display: flex;
             justify-content: space-around;
-            margin-top: 40px;
+            margin-top: 30px;
             border-top: 1px dashed #ccc;
-            padding-top: 20px;
+            padding-top: 15px;
+            flex-wrap: wrap; /* السماح بلف التوقيعات */
         }
         .signature-box {
-            flex-basis: 40%;
+            flex-basis: 45%; /* زيادة حجم الصندوق */
+            margin: 10px 0;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
         }
-        .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 180px; }
-        .role-name {
-             font-weight: bold; 
-             cursor: text;
-        }
+        .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 150px; }
+        .role-name { font-weight: bold; cursor: text; }
 
         /* عناصر التحكم */
-        .controls { text-align: center; margin-top: 30px; padding: 15px; background-color: #eee; border: 1px solid #ddd; border-radius: 5px; }
-        .controls button { background-color: #0056b3; color: white; border: none; padding: 10px 20px; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 4px; }
+        .controls { text-align: center; margin-top: 20px; padding: 10px; }
+        .controls button { 
+            background-color: #0056b3; color: white; border: none; padding: 8px 15px; 
+            font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 4px;
+            flex-grow: 1; /* السماح للأزرار بالتمدد */
+        }
         .controls button.save-button { background-color: #28a745; }
-        .controls button.save-button:hover { background-color: #1e7e34; }
-        .controls button:hover { background-color: #004494; }
+        
+        /* استعلامات الوسائط (Media Queries) للاستجابة التلقائية */
+        
+        /* شاشات صغيرة (الهواتف) */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            
+            .header {
+                flex-direction: column; /* ترتيب العناصر عموديًا */
+                text-align: center;
+            }
+            .logo-placeholder {
+                order: 1;
+                margin-bottom: 10px;
+            }
+            .main-title {
+                order: 2;
+                font-size: 22px;
+                padding: 0;
+                margin-bottom: 15px;
+            }
+            .header > div:last-child {
+                display: none; /* إخفاء الفراغ */
+            }
+
+            .info-section {
+                flex-direction: column; /* ترتيب المعلومات الأساسية عموديًا */
+                align-items: flex-start;
+            }
+
+            .signatures {
+                flex-direction: column;
+            }
+            .signature-box {
+                flex-basis: 100%; /* جعل كل توقيع يأخذ سطر كامل */
+            }
+            
+            .controls {
+                display: flex;
+                flex-direction: column;
+            }
+            .controls button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+        
+        /* شاشات متوسطة (التابلت) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            .container {
+                padding: 20px;
+            }
+            .info-section {
+                font-size: 14px;
+            }
+            .main-title {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 <body onload="hideLoader()">
@@ -182,12 +236,12 @@
 
         <div class="header">
             <div id="logo-control" class="logo-placeholder">
-                <button id="logo-upload-button" title="اضغط لتحميل شعار الشركة" style="all: unset; cursor: pointer; display: block; height: 100%; width: 100%; line-height: 100px; font-size: 12px; color: #333;">تحميل شعار</button>
+                <button id="logo-upload-button" title="اضغط لتحميل شعار الشركة" style="all: unset; cursor: pointer; display: block; height: 100%; width: 100%; line-height: 80px; font-size: 12px; color: #333;">تحميل شعار</button>
             </div>
             <div class="logo-placeholder printable" id="printable-logo"></div>
             
             <h1 class="main-title" contenteditable="true">نموذج استلام فرش</h1>
-            <div style="width: 100px; height: 100px; order: 3;"></div>
+            <div style="width: 80px; height: 80px; order: 3; flex-shrink: 0;"></div>
         </div>
 
         <div class="info-section">
@@ -202,30 +256,32 @@
             </div>
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>م</th>
-                    <th>الموديل</th>
-                    <th>اللون</th>
-                    <th>الكمية المسلمة (رقم)</th>
-                    <th>اسم المفصل (العامل)</th>
-                    <th>توقيع المفصل</th>
-                    <th class="delete-column">حذف</th>
-                </tr>
-            </thead>
-            <tbody id="materials-table-body">
-                <tr>
-                    <td contenteditable="true" class="serial-number">1</td>
-                    <td contenteditable="true">موديل X10</td>
-                    <td contenteditable="true">أزرق داكن</td>
-                    <td contenteditable="true" class="quantity-input" oninput="calculateTotal()">50</td>
-                    <td contenteditable="true">اسم العامل الأول</td>
-                    <td></td>
-                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>م</th>
+                        <th>الموديل</th>
+                        <th>اللون</th>
+                        <th>الكمية المسلمة (رقم)</th>
+                        <th>اسم المفصل (العامل)</th>
+                        <th>توقيع المفصل</th>
+                        <th class="delete-column">حذف</th>
+                    </tr>
+                </thead>
+                <tbody id="materials-table-body">
+                    <tr>
+                        <td contenteditable="true" class="serial-number">1</td>
+                        <td contenteditable="true">موديل X10</td>
+                        <td contenteditable="true">أزرق داكن</td>
+                        <td contenteditable="true" class="quantity-input" oninput="calculateTotal()">50</td>
+                        <td contenteditable="true">اسم العامل الأول</td>
+                        <td></td>
+                        <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="signatures">
             
@@ -272,7 +328,7 @@
             // تعيين الشعار في مكانه المخصص للعرض والتحكم
             logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
             logoControl.style.border = 'none';
-            document.getElementById('logo-upload-button').textContent = ''; 
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; 
             
             // تعيين الشعار في مكانه المخصص للطباعة
             printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
@@ -389,4 +445,3 @@
 
 </body>
 </html>
-
