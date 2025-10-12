@@ -111,15 +111,14 @@
             .table-wrapper {
                 overflow: visible !important;
             }
-            /* إخفاء جميع عناصر التحكم غير الضرورية */
-            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info, .link-to-funde {
+            /* إخفاء جميع عناصر التحكم غير الضرورية والزر الجديد */
+            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info, #funde-link-container {
                 display: none !important;
             }
             /* إظهار الشعار المخصص للطباعة */
             .logo-placeholder.printable {
                 display: block !important;
             }
-            /* إزالة الفواصل غير الضرورية */
             .header {
                 border-bottom: 3px solid #0056b3 !important;
                 justify-content: space-between;
@@ -161,14 +160,6 @@
                 font-size: 14px !important;
                 font-weight: bold !important;
             }
-            .total-row-container span {
-                display: inline !important;
-                padding: 0 !important;
-                border: none !important;
-                background-color: transparent !important;
-                min-width: auto !important;
-                text-align: right !important;
-            }
             
             /* توقيعات النهاية */
             .signature-box .signature-name-line {
@@ -177,6 +168,29 @@
             }
         }
         
+        /* زر التنقل للنموذج الآخر */
+        #funde-link-container {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        #funde-link-container .nav-button {
+            display: inline-block;
+            background-color: #f44336; /* لون مختلف لتمييزه */
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        #funde-link-container .nav-button:hover {
+            background-color: #d32f2f;
+        }
+
+
         /* رأس النموذج والشعار */
         .header {
             display: flex;
@@ -260,7 +274,7 @@
             border-top: 1px solid #ccc;
             padding-top: 10px;
             margin-bottom: 20px;
-            text-align: right; /* محاذاة النص لليمين */
+            text-align: right; 
         }
         .total-row {
             font-size: 16px;
@@ -318,6 +332,10 @@
     </style>
 </head>
 <body onload="hideLoader()">
+
+    <div id="funde-link-container">
+        <a href="نموذج-استلام-فوندي.html" target="_blank" class="nav-button">نموذج استلام الفوندي</a>
+    </div>
 
     <div id="loader" class="loader-container">
         <div class="loader-logo">Sigma</div>
@@ -422,7 +440,8 @@
                 newRow.innerHTML = `
                     <td contenteditable="true" class="serial-number">${i + 1}</td>
                     <td contenteditable="true"></td>
-                    <td contenteditable="true"></td> <td contenteditable="true"></td>
+                    <td contenteditable="true"></td> 
+                    <td contenteditable="true"></td>
                     <td contenteditable="true" class="quantity-input"></td>
                     <td contenteditable="true"></td>
                     <td></td>
@@ -449,7 +468,7 @@
             
             logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
             logoControl.style.border = 'none';
-            document.getElementById('logo-upload-button').textContent = ''; 
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; 
             
             printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
 
@@ -529,7 +548,8 @@
                 newRow.innerHTML = `
                     <td contenteditable="true" class="serial-number">${newIndex}</td>
                     <td contenteditable="true"></td>
-                    <td contenteditable="true"></td> <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
                     <td contenteditable="true" class="quantity-input"></td>
                     <td contenteditable="true"></td>
                     <td></td>
@@ -569,4 +589,3 @@
 
 </body>
 </html>
-
