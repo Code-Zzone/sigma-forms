@@ -48,7 +48,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #28a745; 
+            background-color: #28a745;
             color: white;
             padding: 15px 30px;
             border-radius: 8px;
@@ -75,7 +75,7 @@
             padding: 20px;
             background-color: #f4f4f4;
             color: #333;
-            font-size: 16px; 
+            font-size: 16px;
         }
 
         .container {
@@ -91,25 +91,31 @@
 
         /* أنماط الطباعة النهائية (الأهم) */
         @media print {
+            /* 💥 الإضافة الجديدة هنا لإخفاء حاويات الروابط */
+            #funde-link-container {
+                display: none !important; 
+            }
+            /* ---------------------------------------------------- */
+            
             /* إعدادات الطباعة الأساسية لضمان أفضل تنسيق على A4 */
             @page {
                 size: A4 portrait;
                 margin: 1cm;
             }
             body, .container {
-                overflow: hidden !important; 
+                overflow: hidden !important;
                 margin: 0 !important;
                 padding: 0 !important;
             }
             .container {
                 box-shadow: none !important;
                 border: none !important;
-                width: 100%; 
+                width: 100%;
                 max-width: 100%;
             }
             /* إزالة شريط التمرير من الجدول ومن جسم الصفحة لطباعة نظيفة */
             .table-wrapper {
-                overflow: hidden !important; 
+                overflow: hidden !important;
             }
             /* إخفاء عناصر التحكم */
             .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info {
@@ -120,7 +126,7 @@
                 display: block !important;
             }
             .main-title {
-                font-size: 22px !important; 
+                font-size: 22px !important;
                 padding: 0;
                 margin: 0;
             }
@@ -128,13 +134,13 @@
             table {
                 width: 100% !important;
                 min-width: 100% !important;
-                table-layout: fixed; 
+                table-layout: fixed;
             }
             th, td {
                 padding: 4px 2px;
                 font-size: 11px;
                 white-space: normal;
-                word-wrap: break-word; 
+                word-wrap: break-word;
             }
             /* تحديد عرض الأعمدة لضمان التناسب في الطباعة */
             td:nth-child(1), th:nth-child(1) { width: 4%; } /* م */
@@ -145,9 +151,9 @@
 
             /* تنسيق صف الإجمالي في الطباعة */
             .total-row-container {
-                border-top: 2px solid #333 !important; 
-                padding-top: 10px !important; 
-                margin-top: 5px !important; 
+                border-top: 2px solid #333 !important;
+                padding-top: 10px !important;
+                margin-top: 5px !important;
                 text-align: right !important; /* محاذاة النص لليمين في الطباعة */
                 font-size: 14px !important;
                 font-weight: bold !important;
@@ -164,14 +170,14 @@
             
             /* توقيعات النهاية */
             .info-section {
-                display: none !important; 
+                display: none !important;
             }
             .final-signature-container {
                 border-top: none !important;
                 padding-top: 10px !important;
             }
             .final-signature-container .signature-box {
-                flex-basis: 48% !important; 
+                flex-basis: 48% !important;
             }
             .signature-name-line {
                  border-bottom: none !important;
@@ -201,7 +207,7 @@
         
         #logo-control {
             border: 1px dashed #999;
-            order: 1; 
+            order: 1;
             text-align: center;
             line-height: 80px;
             font-size: 12px;
@@ -225,19 +231,19 @@
         /* معلومات أساسية */
         .info-section {
             display: flex;
-            justify-content: space-between; 
+            justify-content: space-between;
             margin-bottom: 20px;
             font-size: 15px;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
         }
         .info-section > div {
-             flex-basis: 48%; 
+             flex-basis: 48%;
              margin: 5px 0;
         }
         
         @media (max-width: 600px) {
             .info-section > div {
-                flex-basis: 100%; 
+                flex-basis: 100%;
             }
         }
 
@@ -247,9 +253,9 @@
         }
         table {
             width: 100%;
-            min-width: 950px; 
-            border-collapse: collapse; 
-            margin-bottom: 10px; 
+            min-width: 950px;
+            border-collapse: collapse;
+            margin-bottom: 10px;
             font-size: 13px;
         }
         th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
@@ -277,7 +283,7 @@
         /* قسم التوقيعات */
         .final-signature-container {
             display: flex;
-            justify-content: space-around; 
+            justify-content: space-around;
             margin-top: 30px;
             border-top: 1px dashed #ccc;
             padding-top: 15px;
@@ -285,7 +291,7 @@
         }
         
         .signature-box {
-            flex-basis: 45%; 
+            flex-basis: 45%;
             margin: 10px 0;
             text-align: center;
             font-size: 13px;
@@ -293,18 +299,18 @@
 
         .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 150px; }
         .role-name { font-weight: bold; cursor: text; }
-        .signature-name-line { 
-            height: 1px; 
-            border-bottom: 1px dotted #333; 
-            margin: 5px auto 0; 
-            width: 180px; 
-            min-height: 15px; 
+        .signature-name-line {
+            height: 1px;
+            border-bottom: 1px dotted #333;
+            margin: 5px auto 0;
+            width: 180px;
+            min-height: 15px;
         }
 
         /* عناصر التحكم */
         .controls { text-align: center; margin-top: 20px; padding: 10px; }
-        .controls button { 
-            background-color: #0056b3; color: white; border: none; padding: 8px 15px; 
+        .controls button {
+            background-color: #0056b3; color: white; border: none; padding: 8px 15px;
             font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 4px;
             flex-grow: 1;
         }
@@ -328,9 +334,10 @@
     <div id="funde-link-container">
         <a href="نموذج-استلام-الفوندي-المجهز-للحقن.html" target="_blank" class="nav-button">نموذج استلام الفوندي المجهز للحقن</a>
     </div>
-        <div id="funde-link-container">
+    <div id="funde-link-container">
         <a href="نموذج-وش-الفوندي-مكنجي-كبسون.html" target="_blank" class="nav-button">نموذج وش الفوندي مكنجي او كبسون</a>
     </div>
+    
     <div id="loader" class="loader-container">
         <div class="loader-logo">Sigma</div>
     </div>
