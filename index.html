@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج استلام فرش (خامات)</title>
+    <title>نموذج استلام فرش</title>
     <style>
         /* أنماط اللودر (شاشة التحميل) */
         .loader-container {
@@ -33,7 +33,7 @@
             position: absolute;
             top: 0;
             right: 0;
-            color: #f44336; /* لون ثانٍ لجزء من الشعار */
+            color: #f44336;
             clip-path: inset(0 50% 0 0);
         }
 
@@ -73,12 +73,28 @@
                 padding: 0;
             }
             /* إخفاء أزرار التحكم وعمود الحذف عند الطباعة */
-            .controls, #print-button, #logo-control, .delete-column, .save-button {
+            .controls, #print-button, #logo-upload-button, .delete-column, .save-button {
                 display: none !important;
             }
             /* إظهار الشعار في الطباعة فقط */
             .logo-placeholder.printable {
                 display: block !important;
+            }
+            /* التأكد من أن العنوان في المنتصف في الطباعة */
+            .header {
+                justify-content: center;
+            }
+            .header .logo-placeholder {
+                order: 1;
+                margin-left: auto; /* دفع الشعار لليمين */
+                margin-right: 0;
+            }
+            .header .main-title {
+                order: 2;
+                margin: 0 auto; /* توسيط العنوان */
+            }
+            .header > div:last-child {
+                display: none; /* إخفاء العنصر الفارغ في الطباعة */
             }
         }
 
@@ -104,10 +120,9 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            order: 1; /* يوضع الشعار على اليمين في نمط rtl */
+            order: 1; /* الشعار على اليمين في rtl */
         }
         .logo-placeholder.printable {
-            display: none;
             border: none;
             background-color: transparent;
         }
@@ -118,7 +133,7 @@
             font-weight: bold;
             flex-grow: 1;
             text-align: center;
-            order: 2; /* العنوان في المنتصف */
+            order: 2;
         }
 
         /* معلومات أساسية */
@@ -145,13 +160,13 @@
         /* قسم التوقيعات */
         .signatures {
             display: flex;
-            justify-content: space-around; /* توزيع متساوٍ للمسافات */
+            justify-content: space-around;
             margin-top: 40px;
             border-top: 1px dashed #ccc;
             padding-top: 20px;
         }
         .signature-box {
-            flex-basis: 40%; /* زيادة عرض صندوق التوقيع */
+            flex-basis: 40%;
             text-align: center;
             font-size: 14px;
         }
@@ -174,10 +189,12 @@
     <div class="container">
 
         <div class="header">
-            <div id="logo-control" class="logo-placeholder" title="اضغط لتحميل شعار الشركة">اضغط لتحميل الشعار</div>
-            <div class="logo-placeholder printable" id="printable-logo" style="display: none;"></div>
+            <div id="logo-control" class="logo-placeholder">
+                <button id="logo-upload-button" title="اضغط لتحميل شعار الشركة" style="all: unset; cursor: pointer; display: block; height: 100%; width: 100%; line-height: 100px; font-size: 12px; color: #333;">تحميل شعار</button>
+            </div>
+            <div class="logo-placeholder printable" id="printable-logo"></div>
             
-            <h1 class="main-title" contenteditable="true">نموذج استلام فرش (خامات)</h1>
+            <h1 class="main-title" contenteditable="true">نموذج استلام فرش</h1>
             <div style="width: 100px; height: 100px; order: 3;"></div>
         </div>
 
@@ -235,13 +252,14 @@
     </div>
 
     <div class="controls">
-        <button id="add-row-button">إضافة صف جديد للخامات</button>
+        <button id="add-row-button">إضافة صف جديد للفرش</button>
         <button class="save-button" onclick="confirmAndPrintPreparation()">حفظ وتأكيد الإجمالي قبل الطباعة</button>
         <button onclick="window.print()" id="print-button" disabled>طباعة النموذج</button>
     </div>
 
     <script>
         let isConfirmed = false;
+        const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg';
 
         // دالة لإخفاء اللودر
         function hideLoader() {
@@ -253,18 +271,29 @@
             }, 500);
         }
 
-        // دالة لحساب الإجمالي التلقائي وتفعيل زر الطباعة
+        // دالة لتعيين الشعار الافتراضي
+        function setDefaultLogo() {
+            const logoControl = document.getElementById('logo-control');
+            const printableLogo = document.getElementById('printable-logo');
+            
+            logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+            logoControl.style.border = 'none';
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; // تغيير نص الزر
+            
+            // تعيين الشعار في مكانه المخصص للطباعة
+            printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+        }
+
+        // دالة لحساب الإجمالي التلقائي
         function calculateTotal() {
             const quantityInputs = document.querySelectorAll('.quantity-input');
             let total = 0;
             quantityInputs.forEach(input => {
-                // إزالة أي وحدات قياس محتملة والتركيز على الرقم
                 const quantity = parseFloat(input.textContent.trim().replace(/[^\d.]/g, '')) || 0;
                 total += quantity;
             });
             document.getElementById('total-received').textContent = total.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
             
-            // إلغاء التأكيد إذا تم التعديل على الكميات بعد الحفظ
             if (isConfirmed) {
                 isConfirmed = false;
                 document.getElementById('print-button').disabled = true;
@@ -274,11 +303,11 @@
         
         // دالة للحفظ والتأكيد قبل الطباعة
         function confirmAndPrintPreparation() {
-            calculateTotal(); // تأكيد الإجمالي مرة أخيرة
+            calculateTotal();
             isConfirmed = true;
             document.getElementById('print-button').disabled = false;
             document.getElementById('print-button').textContent = 'طباعة النموذج';
-            alert(`تم حفظ الإجمالي وتأكيده: ${document.getElementById('total-received').textContent}. يمكنك الآن الطباعة.`);
+            alert(`✅ تم حفظ الإجمالي وتأكيده: ${document.getElementById('total-received').textContent}. يمكنك الآن الطباعة.`);
         }
 
         // دالة لإعادة ترقيم الصفوف بعد الحذف أو الإضافة
@@ -297,8 +326,10 @@
             calculateTotal();
         }
 
-        // تهيئة التاريخ وإضافة الصفوف والشعار
+        // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', () => {
+            setDefaultLogo(); // تعيين الشعار الافتراضي
+            
             // تهيئة التاريخ
             const dateSpan = document.getElementById('current-date');
             const today = new Date();
@@ -328,8 +359,8 @@
                 renumberRows();
             });
 
-            // دالة تحميل الشعار
-            document.getElementById('logo-control').addEventListener('click', () => {
+            // دالة تحميل شعار جديد
+            document.getElementById('logo-upload-button').addEventListener('click', () => {
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
                 fileInput.accept = 'image/*';
@@ -343,13 +374,7 @@
                             const printableLogo = document.getElementById('printable-logo');
                             
                             logoControl.style.backgroundImage = `url(${base64Image})`;
-                            logoControl.textContent = '';
-                            logoControl.style.border = 'none';
-
                             printableLogo.style.backgroundImage = `url(${base64Image})`;
-                            printableLogo.textContent = '';
-                            printableLogo.style.display = 'block';
-                            logoControl.style.display = 'none'; // إخفاء مربع التحكم بالشعار بعد التحميل
                         };
                         reader.readAsDataURL(file);
                     }
