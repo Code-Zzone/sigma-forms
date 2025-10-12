@@ -89,11 +89,44 @@
             overflow-x: auto;
         }
 
+        /* أنماط أزرار التنقل */
+        #funde-link-container {
+            text-align: right;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap; 
+        }
+
+        #funde-link-container .nav-button {
+            display: inline-block;
+            background-color: #f44336; 
+            color: white;
+            padding: 8px 12px;
+            font-size: 13px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            white-space: nowrap; 
+        }
+        
+        #funde-link-container a:nth-child(1) { background-color: #28a745; }
+        #funde-link-container a:nth-child(2) { background-color: #dc3545; }
+        #funde-link-container a:nth-child(3) { background-color: #007bff; }
+        #funde-link-container a:nth-child(4) { background-color: #ffc107; color: #333; }
+        
+        #funde-link-container .nav-button:hover {
+            opacity: 0.9;
+        }
+
+
         /* أنماط الطباعة النهائية (الأهم) */
         @media print {
             /* إعدادات الطباعة الأساسية لضمان أفضل تنسيق على A4 */
             @page {
-                size: A4 portrait;
+                size: A4 portrait; /* الوضع العمودي */
                 margin: 1cm;
             }
             /* إخفاء شريط التمرير وكل العناصر غير الضرورية */
@@ -111,7 +144,7 @@
             .table-wrapper {
                 overflow: visible !important;
             }
-            /* إخفاء جميع عناصر التحكم غير الضرورية والزر الجديد */
+            /* إخفاء جميع عناصر التحكم غير الضرورية */
             .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info, #funde-link-container {
                 display: none !important;
             }
@@ -140,16 +173,20 @@
                 table-layout: fixed; 
             }
             th, td {
-                padding: 4px 2px;
-                font-size: 11px;
+                padding: 3px 1px; /* تصغير البادينغ ليتسع المحتوى */
+                font-size: 10px; /* تصغير الخط أكثر */
                 white-space: normal;
                 word-wrap: break-word; 
             }
-            /* تحديد عرض الأعمدة لضمان التناسب في الطباعة */
-            td:nth-child(1), th:nth-child(1) { width: 4%; } /* م */
+            /* تحديد عروض الأعمدة لضمان التناسب في الطباعة (8 أعمدة) */
+            td:nth-child(1), th:nth-child(1) { width: 3%; } /* م */
             td:nth-child(2), th:nth-child(2) { width: 15%; } /* الموديل */
-            td:nth-child(3), th:nth-child(3) { width: 12%; } /* المقاس */
-            td:nth-child(6), th:nth-child(6) { width: 15%; } /* توقيع المفصل */
+            td:nth-child(3), th:nth-child(3) { width: 8%; } /* المقاس */
+            td:nth-child(4), th:nth-child(4) { width: 10%; } /* اللون */
+            td:nth-child(5), th:nth-child(5) { width: 13%; } /* تواب الفرش (الجديد) */
+            td:nth-child(6), th:nth-child(6) { width: 15%; } /* الكمية المسلمة */
+            td:nth-child(7), th:nth-child(7) { width: 20%; } /* اسم المفصل */
+            td:nth-child(8), th:nth-child(8) { width: 16%; } /* توقيع المفصل */
 
             /* تنسيق صف الإجمالي في الطباعة */
             .total-row-container {
@@ -168,29 +205,6 @@
             }
         }
         
-        /* زر التنقل للنموذج الآخر */
-        #funde-link-container {
-            text-align: right;
-            margin-bottom: 15px;
-        }
-
-        #funde-link-container .nav-button {
-            display: inline-block;
-            background-color: #f44336; /* لون مختلف لتمييزه */
-            color: white;
-            padding: 8px 15px;
-            font-size: 14px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        #funde-link-container .nav-button:hover {
-            background-color: #d32f2f;
-        }
-
-
         /* رأس النموذج والشعار */
         .header {
             display: flex;
@@ -258,7 +272,7 @@
         }
         table {
             width: 100%;
-            min-width: 700px;
+            min-width: 800px; /* تم زيادة العرض ليتناسب مع العمود الجديد */
             border-collapse: collapse; 
             margin-bottom: 10px; 
             font-size: 14px;
@@ -334,16 +348,11 @@
 <body onload="hideLoader()">
     <div id="funde-link-container">
         <a href="نموذج-استلام-الفوندي-المجهز-للحقن.html" target="_blank" class="nav-button"> نموذج استلام الفوندي المجهز للحقن</a>
-    </div>
-        <div id="funde-link-container">
-        <a href="نموذج-اخطاء-بالتصنيع.html" target="_blank" class="nav-button"> نموذج-اخطاء-بالتصنيع</a>
-    </div>
-    <div id="funde-link-container">
+        <a href="نموذج-اخطاء-بالتصنيع.html" target="_blank" class="nav-button"> نموذج أخطاء بالتصنيع</a>
         <a href="نموذج-استلام-فوندي.html" target="_blank" class="nav-button">نموذج استلام الفوندي</a>
+        <a href="نموذج-وش-الفوندي-مكنجي-كبسون.html" target="_blank" class="nav-button"> نموذج وش الفوندي مكنجي أو كبسون</a>
     </div>
-    <div id="funde-link-container">
-        <a href="نموذج-وش-الفوندي-مكنجي-كبسون.html" target="_blank" class="nav-button">  نموذج وش الفوندي مكنجي او كبسون</a>
-    </div>
+
     <div id="loader" class="loader-container">
         <div class="loader-logo">Sigma</div>
     </div>
@@ -369,16 +378,18 @@
             <div>
                 التاريخ: <span contenteditable="true" id="current-date">DD / MM / YYYY</span>
             </div>
-            </div>
+        </div>
 
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th>م</th>
+                        <th>تواب الفرش</th>
                         <th>الموديل</th>
-                        <th>المقاس</th> <th>اللون</th>
-                        <th>الكمية المسلمة (رقم)</th>
+                        <th>المقاس</th> 
+                        <th>اللون</th>
+                         <th>الكمية المسلمة (رقم)</th>
                         <th>اسم المفصل (العامل)</th>
                         <th>توقيع المفصل</th>
                         <th class="delete-column">حذف</th>
@@ -441,18 +452,12 @@
         // دالة لتهيئة 10 صفوف فارغة
         function initializeTableRows() {
             const tableBody = document.getElementById('materials-table-body');
-            tableBody.innerHTML = ''; // التأكد من الإفراغ قبل التعبئة
+            tableBody.innerHTML = ''; 
             for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
                 const newRow = tableBody.insertRow();
                 newRow.innerHTML = `
                     <td contenteditable="true" class="serial-number">${i + 1}</td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td> 
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true" class="quantity-input"></td>
-                    <td contenteditable="true"></td>
-                    <td></td>
-                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+                    <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true" class="quantity-input"></td> <td contenteditable="true"></td> <td></td> <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
                 `;
             }
         }
@@ -554,11 +559,11 @@
 
                 newRow.innerHTML = `
                     <td contenteditable="true" class="serial-number">${newIndex}</td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true"></td>
-                    <td contenteditable="true" class="quantity-input"></td>
-                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td> 
+                    <td contenteditable="true"></td> 
+                    <td contenteditable="true"></td> 
+                    <td contenteditable="true"></td> <td contenteditable="true" class="quantity-input"></td> 
+                    <td contenteditable="true"></td> 
                     <td></td>
                     <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
                 `;
@@ -596,6 +601,3 @@
 
 </body>
 </html>
-
-
-
