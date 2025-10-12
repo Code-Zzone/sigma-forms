@@ -79,19 +79,16 @@
             /* إظهار الشعار في الطباعة فقط */
             .logo-placeholder.printable {
                 display: block !important;
+                border: none !important; /* إزالة الحدود عند الطباعة */
+                background-color: transparent !important;
+            }
+            /* إخفاء زر تحميل الشعار في الطباعة */
+            #logo-control {
+                display: none !important;
             }
             /* التأكد من أن العنوان في المنتصف في الطباعة */
             .header {
                 justify-content: center;
-            }
-            .header .logo-placeholder {
-                order: 1;
-                margin-left: auto; /* دفع الشعار لليمين */
-                margin-right: 0;
-            }
-            .header .main-title {
-                order: 2;
-                margin: 0 auto; /* توسيط العنوان */
             }
             .header > div:last-child {
                 display: none; /* إخفاء العنصر الفارغ في الطباعة */
@@ -111,20 +108,17 @@
         .logo-placeholder {
             width: 100px;
             height: 100px;
-            border: 1px dashed #999;
-            text-align: center;
-            line-height: 100px;
-            font-size: 12px;
-            cursor: pointer;
-            background-color: #eee;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            order: 1; /* الشعار على اليمين في rtl */
         }
-        .logo-placeholder.printable {
-            border: none;
-            background-color: transparent;
+
+        #logo-control {
+            border: 1px dashed #999;
+            order: 1; /* الشعار على اليمين في rtl */
+            text-align: center;
+            line-height: 100px;
+            font-size: 12px;
         }
 
         .main-title {
@@ -152,7 +146,7 @@
         table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 15px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
         th { background-color: #f2f2f2; color: #333; }
-        td[contenteditable="true"]:focus { outline: 2px solid #0056b3; }
+        td[contenteditable="true"]:focus, span[contenteditable="true"]:focus { outline: 2px solid #0056b3; }
 
         .delete-btn { background-color: #f44336; color: white; border: none; padding: 5px 10px; font-size: 12px; cursor: pointer; border-radius: 3px; }
         .delete-btn:hover { background-color: #da190b; }
@@ -171,6 +165,10 @@
             font-size: 14px;
         }
         .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 180px; }
+        .role-name {
+             font-weight: bold; 
+             cursor: text; /* للدلالة على أنه قابل للتعديل */
+        }
 
         /* عناصر التحكم */
         .controls { text-align: center; margin-top: 30px; padding: 15px; background-color: #eee; border: 1px solid #ddd; border-radius: 5px; }
@@ -238,14 +236,14 @@
         <div class="signatures">
             
             <div class="signature-box">
-                مسؤول الطباعة
+                <span class="role-name" contenteditable="true">مسؤول الطباعة</span>
                 <div class="signature-line"></div>
-                <!-- الاسم: <span contenteditable="true">اسم مسؤول الطباعة</span> -->
+                الاسم: <span contenteditable="true">اسم مسؤول الطباعة</span>
             </div>
             <div class="signature-box">
-                مسؤول الضم (استلام الإنتاج)
+                <span class="role-name" contenteditable="true">مسؤول الضم (استلام الإنتاج)</span>
                 <div class="signature-line"></div>
-                <!-- الاسم: <span contenteditable="true">اسم مسؤول الضم</span> -->
+                الاسم: <span contenteditable="true">اسم مسؤول الضم</span>
             </div>
         </div>
 
@@ -259,7 +257,8 @@
 
     <script>
         let isConfirmed = false;
-        const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg';
+        // تم تحديث اسم الملف إلى jpeg
+        const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg'; 
 
         // دالة لإخفاء اللودر
         function hideLoader() {
@@ -282,6 +281,10 @@
             
             // تعيين الشعار في مكانه المخصص للطباعة
             printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+
+            // التأكد من أن مكان التحكم غير مرئي ويتم عرض الشعار في الطباعة
+            logoControl.style.display = 'block'; 
+            printableLogo.style.display = 'none'; 
         }
 
         // دالة لحساب الإجمالي التلقائي
@@ -373,6 +376,7 @@
                             const logoControl = document.getElementById('logo-control');
                             const printableLogo = document.getElementById('printable-logo');
                             
+                            // تعيين الشعار الجديد في مكاني العرض والطباعة
                             logoControl.style.backgroundImage = `url(${base64Image})`;
                             printableLogo.style.backgroundImage = `url(${base64Image})`;
                         };
@@ -390,4 +394,3 @@
 
 </body>
 </html>
-
