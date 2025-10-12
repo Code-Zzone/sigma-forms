@@ -117,7 +117,7 @@
         }
 
         /* تنسيق ألوان أزرار التنقل */
-        .nav-button-group a:nth-child(1) { background-color: #dc3545; } /* نموذج أخطاء (مميز) */
+        .nav-button-group a:nth-child(1) { background-color: #dc3545; } 
         .nav-button-group a:nth-child(2) { background-color: #007bff; }
         .nav-button-group a:nth-child(3) { background-color: #28a745; }
         .nav-button-group a:nth-child(4) { background-color: #ffc107; color: #333; }
@@ -125,7 +125,11 @@
 
         /* أنماط الطباعة النهائية (الأهم) */
         @media print {
-            @page { size: A4 landscape; margin: 1cm; } /* تغيير إلى A4 أفقي لاستيعاب الأعمدة */
+            /* تعديل مهم: تم تغيير الطباعة إلى الوضع العمودي A4 portrait */
+            @page { 
+                size: A4 portrait; 
+                margin: 1cm; 
+            } 
             body, .container { overflow: hidden !important; margin: 0 !important; padding: 0 !important; }
             .container { box-shadow: none !important; border: none !important; width: 100%; max-width: 100%; }
             .table-wrapper { overflow: visible !important; }
@@ -143,20 +147,21 @@
                 table-layout: fixed; 
             }
             th, td {
-                padding: 4px 2px;
-                font-size: 10px; /* تصغير الخط ليتسع المحتوى */
+                padding: 3px 1px; /* تصغير البادينغ ليتسع المحتوى */
+                font-size: 9.5px; /* تصغير الخط أكثر */
                 white-space: normal;
                 word-wrap: break-word; 
             }
-            /* تحديد عرض الأعمدة (هذا ضروري جداً لطباعة الأخطاء) */
-            td:nth-child(1), th:nth-child(1) { width: 4%; } /* م */
+            
+            /* تحديد عروض الأعمدة لتناسب وضع A4 العمودي */
+            td:nth-child(1), th:nth-child(1) { width: 3%; } /* م */
             td:nth-child(2), th:nth-child(2) { width: 15%; } /* الموديل */
-            td:nth-child(3), th:nth-child(3) { width: 8%; } /* المقاس */
+            td:nth-child(3), th:nth-child(3) { width: 7%; } /* المقاس */
             td:nth-child(4), th:nth-child(4) { width: 10%; } /* اللون */
-            td:nth-child(5), th:nth-child(5) { width: 6%; } /* العدد بالجوز بالجوز بالجوز بالجوز بالجوز */
-            td:nth-child(6), th:nth-child(6) { width: 15%; } /* اسم المكنجي */
-            td:nth-child(7), th:nth-child(7) { width: 15%; } /* اسم المفصل */
-            td:nth-child(8), th:nth-child(8) { width: 15%; } /* اسم مسؤل الطباعة */
+            td:nth-child(5), th:nth-child(5) { width: 6%; } /* العدد */
+            td:nth-child(6), th:nth-child(6) { width: 20%; } /* اسم المكنجي */
+            td:nth-child(7), th:nth-child(7) { width: 20%; } /* اسم المفصل */
+            td:nth-child(8), th:nth-child(8) { width: 19%; } /* اسم مسؤل الطباعة */
 
             /* تنسيق صف الإجمالي في الطباعة */
             .total-row-container {
@@ -181,7 +186,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            border-bottom: 3px solid #dc3545; /* لون مختلف لتمييز نموذج الأخطاء */
+            border-bottom: 3px solid #dc3545; 
             padding-bottom: 10px;
             flex-wrap: wrap;
         }
@@ -242,10 +247,10 @@
         }
         table {
             width: 100%;
-            min-width: 850px; /* تم زيادة العرض ليتناسب مع الأعمدة الجديدة */
+            min-width: 850px; /* العرض الأدنى لتجنب الانهيار في التحرير */
             border-collapse: collapse; 
             margin-bottom: 10px; 
-            font-size: 13px; /* تصغير الخط ليتسع الجدول */
+            font-size: 13px;
         }
         th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
         th { background-color: #f2f2f2; color: #333; }
@@ -360,7 +365,7 @@
                         <th>الموديل</th>
                         <th>المقاس</th>
                         <th>اللون</th>
-                        <th>العدد بالجوز بالجوز بالجوز بالجوز</th>
+                        <th>العدد</th>
                         <th>اسم المكنجي</th>
                         <th>اسم المفصل</th>
                         <th>اسم مسؤل الطباعة</th>
