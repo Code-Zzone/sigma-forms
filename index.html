@@ -42,6 +42,32 @@
             to { transform: scale(1.1); opacity: 1; }
         }
 
+        /* أنماط رسالة التأكيد المخصصة */
+        #confirmation-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745; 
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s, visibility 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #confirmation-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* الأنماط العامة للصفحة */
         body {
             font-family: 'Arial', sans-serif;
@@ -49,21 +75,56 @@
             padding: 20px;
             background-color: #f4f4f4;
             color: #333;
-            /* حجم الخط الأساسي */
             font-size: 16px; 
         }
 
         .container {
             max-width: 900px;
-            min-width: 300px; /* ضمان حد أدنى للعرض */
+            min-width: 300px;
             margin: 0 auto;
             background: #fff;
             padding: 30px;
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto; /* مهم للجدول على الشاشات الصغيرة */
+            overflow-x: auto;
         }
 
+        /* أنماط الطباعة النهائية (الأهم) */
+        @media print {
+            /* إخفاء شريط التمرير */
+            body, .container {
+                overflow: hidden !important; 
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .container {
+                box-shadow: none !important;
+                border: none !important;
+            }
+            /* إخفاء جميع عناصر التحكم غير الضرورية */
+            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info {
+                display: none !important;
+            }
+            /* إظهار الشعار المخصص للطباعة وتأكيد مظهره النظيف */
+            .logo-placeholder.printable {
+                display: block !important;
+                border: none !important;
+                background-color: transparent !important;
+            }
+            /* إزالة الفواصل غير الضرورية */
+            .header {
+                border-bottom: 3px solid #0056b3 !important;
+                justify-content: space-between;
+            }
+            .header > div:last-child {
+                display: none;
+            }
+            /* ضمان عرض الجدول كاملاً بلا تمرير */
+            .table-wrapper {
+                overflow: visible !important;
+            }
+        }
+        
         /* رأس النموذج والشعار */
         .header {
             display: flex;
@@ -72,34 +133,34 @@
             margin-bottom: 20px;
             border-bottom: 3px solid #0056b3;
             padding-bottom: 10px;
-            flex-wrap: wrap; /* السماح بلف العناصر على شاشات صغيرة */
+            flex-wrap: wrap;
         }
 
         .logo-placeholder {
-            width: 80px; /* تصغير حجم الشعار قليلاً */
+            width: 80px;
             height: 80px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            flex-shrink: 0; /* منع الشعار من الانكماش */
+            flex-shrink: 0;
         }
         
         #logo-control {
             border: 1px dashed #999;
             order: 1; 
             text-align: center;
-            line-height: 80px; /* يتوافق مع ارتفاع الشعار */
+            line-height: 80px;
             font-size: 12px;
         }
 
         .logo-placeholder.printable {
-            display: none; 
+            display: none;
             order: 1;
         }
 
         .main-title {
             color: #0056b3;
-            font-size: 26px; /* تصغير حجم العنوان قليلاً */
+            font-size: 26px;
             font-weight: bold;
             flex-grow: 1;
             text-align: center;
@@ -110,27 +171,31 @@
         /* معلومات أساسية */
         .info-section {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around; 
             margin-bottom: 20px;
             font-size: 15px;
             flex-wrap: wrap; 
         }
         .info-section div {
-             min-width: 150px; /* ضمان قراءة النص */
+             min-width: 150px;
              margin: 5px 0;
         }
+
         #total-received {
             font-weight: bold;
             color: darkred;
         }
 
         /* جدول البيانات */
+        .table-wrapper {
+            overflow-x: auto;
+        }
         table {
             width: 100%;
-            min-width: 700px; /* للحفاظ على تنسيق الجدول */
+            min-width: 700px;
             border-collapse: collapse; 
             margin-bottom: 10px; 
-            font-size: 14px; /* تصغير الخط داخل الجدول */
+            font-size: 14px;
         }
         th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
         th { background-color: #f2f2f2; color: #333; }
@@ -145,10 +210,10 @@
             margin-top: 30px;
             border-top: 1px dashed #ccc;
             padding-top: 15px;
-            flex-wrap: wrap; /* السماح بلف التوقيعات */
+            flex-wrap: wrap;
         }
         .signature-box {
-            flex-basis: 45%; /* زيادة حجم الصندوق */
+            flex-basis: 45%;
             margin: 10px 0;
             text-align: center;
             font-size: 13px;
@@ -161,68 +226,39 @@
         .controls button { 
             background-color: #0056b3; color: white; border: none; padding: 8px 15px; 
             font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 4px;
-            flex-grow: 1; /* السماح للأزرار بالتمدد */
+            flex-grow: 1;
         }
         .controls button.save-button { background-color: #28a745; }
         
-        /* استعلامات الوسائط (Media Queries) للاستجابة التلقائية */
-        
-        /* شاشات صغيرة (الهواتف) */
+        /* معلومات المطور */
+        #developer-info {
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+
+        /* استعلامات الوسائط (Media Queries) */
         @media (max-width: 600px) {
             body { padding: 10px; }
             .container { padding: 15px; }
-            
-            .header {
-                flex-direction: column; /* ترتيب العناصر عموديًا */
-                text-align: center;
-            }
-            .logo-placeholder {
-                order: 1;
-                margin-bottom: 10px;
-            }
-            .main-title {
-                order: 2;
-                font-size: 22px;
-                padding: 0;
-                margin-bottom: 15px;
-            }
-            .header > div:last-child {
-                display: none; /* إخفاء الفراغ */
-            }
-
-            .info-section {
-                flex-direction: column; /* ترتيب المعلومات الأساسية عموديًا */
-                align-items: flex-start;
-            }
-
-            .signatures {
-                flex-direction: column;
-            }
-            .signature-box {
-                flex-basis: 100%; /* جعل كل توقيع يأخذ سطر كامل */
-            }
-            
-            .controls {
-                display: flex;
-                flex-direction: column;
-            }
-            .controls button {
-                width: 100%;
-                margin: 5px 0;
-            }
+            .header { flex-direction: column; text-align: center; }
+            .logo-placeholder { order: 1; margin-bottom: 10px; }
+            .main-title { order: 2; font-size: 22px; padding: 0; margin-bottom: 15px; }
+            .header > div:last-child { display: none; }
+            .info-section { flex-direction: column; align-items: flex-start; }
+            .signatures { flex-direction: column; }
+            .signature-box { flex-basis: 100%; }
+            .controls { display: flex; flex-direction: column; }
+            .controls button { width: 100%; margin: 5px 0; }
         }
         
-        /* شاشات متوسطة (التابلت) */
         @media (min-width: 601px) and (max-width: 900px) {
-            .container {
-                padding: 20px;
-            }
-            .info-section {
-                font-size: 14px;
-            }
-            .main-title {
-                font-size: 24px;
-            }
+            .container { padding: 20px; }
+            .info-section { font-size: 14px; }
+            .main-title { font-size: 24px; }
         }
     </style>
 </head>
@@ -230,6 +266,11 @@
 
     <div id="loader" class="loader-container">
         <div class="loader-logo">Sigma</div>
+    </div>
+    
+    <div id="confirmation-message">
+        <span id="message-icon">✅</span> 
+        <span id="message-text"></span>
     </div>
 
     <div class="container">
@@ -248,15 +289,12 @@
             <div>
                 التاريخ: <span contenteditable="true" id="current-date">DD / MM / YYYY</span>
             </div>
-            <!-- <div>
-                رقم النموذج: <span contenteditable="true">#</span>
-            </div> -->
             <div>
                 **إجمالي الكمية المسلمة:** <span id="total-received">0</span>
             </div>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
@@ -270,16 +308,7 @@
                     </tr>
                 </thead>
                 <tbody id="materials-table-body">
-                    <tr>
-                        <td contenteditable="true" class="serial-number">1</td>
-                        <td contenteditable="true">موديل X10</td>
-                        <td contenteditable="true">أزرق داكن</td>
-                        <td contenteditable="true" class="quantity-input" oninput="calculateTotal()">50</td>
-                        <td contenteditable="true">اسم العامل الأول</td>
-                        <td></td>
-                        <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
-                    </tr>
-                </tbody>
+                    </tbody>
             </table>
         </div>
 
@@ -288,12 +317,12 @@
             <div class="signature-box">
                 <span class="role-name" contenteditable="true">مسؤول الطباعة</span>
                 <div class="signature-line"></div>
-                <!-- الاسم: <span contenteditable="true">اسم مسؤول الطباعة</span> -->
+                الاسم: <span contenteditable="true">اسم مسؤول الطباعة</span>
             </div>
             <div class="signature-box">
                 <span class="role-name" contenteditable="true">مسؤول الضم (استلام الإنتاج)</span>
                 <div class="signature-line"></div>
-                <!-- الاسم: <span contenteditable="true">اسم مسؤول الضم</span> -->
+                الاسم: <span contenteditable="true">اسم مسؤول الضم</span>
             </div>
         </div>
 
@@ -305,12 +334,16 @@
         <button onclick="window.print()" id="print-button" disabled>طباعة النموذج</button>
     </div>
 
+    <div id="developer-info">
+        Made by Mahmoud Hamed | Copyright © 2025
+    </div>
+
     <script>
         let isConfirmed = false;
-        // تم تحديث اسم الملف إلى jpeg
         const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg'; 
+        let loaderTimeout;
 
-        // دالة لإخفاء اللودر
+        // دالة لإخفاء اللودر عند تحميل الصفحة
         function hideLoader() {
             const loader = document.getElementById('loader');
             loader.style.opacity = '0';
@@ -320,20 +353,28 @@
             }, 500);
         }
 
+        // دالة لإظهار رسالة التأكيد المخصصة
+        function showConfirmationMessage(message) {
+            const messageElement = document.getElementById('confirmation-message');
+            document.getElementById('message-text').textContent = message;
+            messageElement.classList.add('show');
+            
+            setTimeout(() => {
+                messageElement.classList.remove('show');
+            }, 3000);
+        }
+
         // دالة لتعيين الشعار الافتراضي
         function setDefaultLogo() {
             const logoControl = document.getElementById('logo-control');
             const printableLogo = document.getElementById('printable-logo');
             
-            // تعيين الشعار في مكانه المخصص للعرض والتحكم
             logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
             logoControl.style.border = 'none';
-            document.getElementById('logo-upload-button').textContent = ''; 
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; 
             
-            // تعيين الشعار في مكانه المخصص للطباعة
             printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
 
-            // التأكد من إظهار مكان التحكم وإخفاء مكان الطباعة (سيظهر الأخير عند الطباعة فقط)
             logoControl.style.display = 'block'; 
             printableLogo.style.display = 'none'; 
         }
@@ -357,11 +398,32 @@
         
         // دالة للحفظ والتأكيد قبل الطباعة
         function confirmAndPrintPreparation() {
-            calculateTotal();
-            isConfirmed = true;
-            document.getElementById('print-button').disabled = false;
-            document.getElementById('print-button').textContent = 'طباعة النموذج';
-            alert(`✅ تم حفظ الإجمالي وتأكيده: ${document.getElementById('total-received').textContent}. يمكنك الآن الطباعة.`);
+            const loader = document.getElementById('loader');
+            const totalReceived = document.getElementById('total-received').textContent;
+            
+            // 1. إظهار لودر Sigma للتأكيد
+            loader.style.visibility = 'visible';
+            loader.style.opacity = '1';
+
+            // محاكاة عملية الحفظ/التأكيد (تأخير لمدة ثانية واحدة)
+            loaderTimeout = setTimeout(() => {
+                calculateTotal();
+                isConfirmed = true;
+                
+                // 2. تفعيل زر الطباعة
+                document.getElementById('print-button').disabled = false;
+                document.getElementById('print-button').textContent = 'طباعة النموذج';
+
+                // 3. إخفاء اللودر
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.visibility = 'hidden';
+                }, 500);
+
+                // 4. عرض رسالة التأكيد المخصصة
+                showConfirmationMessage(`تم حفظ الإجمالي وتأكيده بنجاح: ${totalReceived}. يمكنك الآن الطباعة.`);
+                
+            }, 1000); 
         }
 
         // دالة لإعادة ترقيم الصفوف بعد الحذف أو الإضافة
@@ -378,11 +440,17 @@
             row.remove();
             renumberRows();
             calculateTotal();
+            // إذا تم حذف آخر صف
+            if (document.getElementById('materials-table-body').rows.length === 0) {
+                isConfirmed = false;
+                document.getElementById('print-button').disabled = true;
+                document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
+            }
         }
 
         // تهيئة الصفحة
         document.addEventListener('DOMContentLoaded', () => {
-            setDefaultLogo(); // تعيين الشعار الافتراضي
+            setDefaultLogo();
             
             // تهيئة التاريخ
             const dateSpan = document.getElementById('current-date');
@@ -427,7 +495,6 @@
                             const logoControl = document.getElementById('logo-control');
                             const printableLogo = document.getElementById('printable-logo');
                             
-                            // تعيين الشعار الجديد في مكاني العرض والطباعة
                             logoControl.style.backgroundImage = `url(${base64Image})`;
                             printableLogo.style.backgroundImage = `url(${base64Image})`;
                         };
@@ -445,6 +512,3 @@
 
 </body>
 </html>
-
-
-
