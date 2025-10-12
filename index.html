@@ -62,36 +62,22 @@
 
         /* أنماط الطباعة */
         @media print {
-            body {
-                background-color: #fff;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-                border: none;
-                margin: 0;
-                padding: 0;
-            }
             /* إخفاء أزرار التحكم وعمود الحذف عند الطباعة */
-            .controls, #print-button, #logo-upload-button, .delete-column, .save-button {
+            .controls, #logo-control, .delete-column, .save-button {
                 display: none !important;
             }
-            /* إظهار الشعار في الطباعة فقط */
+            /* إظهار الشعار المخصص للطباعة فقط */
             .logo-placeholder.printable {
                 display: block !important;
-                border: none !important; /* إزالة الحدود عند الطباعة */
+                border: none !important;
                 background-color: transparent !important;
-            }
-            /* إخفاء زر تحميل الشعار في الطباعة */
-            #logo-control {
-                display: none !important;
             }
             /* التأكد من أن العنوان في المنتصف في الطباعة */
             .header {
                 justify-content: center;
             }
             .header > div:last-child {
-                display: none; /* إخفاء العنصر الفارغ في الطباعة */
+                display: none;
             }
         }
 
@@ -112,14 +98,22 @@
             background-repeat: no-repeat;
             background-position: center;
         }
-
+        
+        /* هذا هو الشعار الذي يظهر في وضع التحرير */
         #logo-control {
             border: 1px dashed #999;
-            order: 1; /* الشعار على اليمين في rtl */
+            order: 1; 
             text-align: center;
             line-height: 100px;
             font-size: 12px;
         }
+
+        /* هذا هو الشعار الذي يظهر في الطباعة فقط */
+        .logo-placeholder.printable {
+            display: none; /* إخفاؤه في وضع العرض العادي */
+            order: 1;
+        }
+
 
         .main-title {
             color: #0056b3;
@@ -167,7 +161,7 @@
         .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 180px; }
         .role-name {
              font-weight: bold; 
-             cursor: text; /* للدلالة على أنه قابل للتعديل */
+             cursor: text;
         }
 
         /* عناصر التحكم */
@@ -275,14 +269,15 @@
             const logoControl = document.getElementById('logo-control');
             const printableLogo = document.getElementById('printable-logo');
             
+            // تعيين الشعار في مكانه المخصص للعرض والتحكم
             logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
             logoControl.style.border = 'none';
-            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; // تغيير نص الزر
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; 
             
             // تعيين الشعار في مكانه المخصص للطباعة
             printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
 
-            // التأكد من أن مكان التحكم غير مرئي ويتم عرض الشعار في الطباعة
+            // التأكد من إظهار مكان التحكم وإخفاء مكان الطباعة (سيظهر الأخير عند الطباعة فقط)
             logoControl.style.display = 'block'; 
             printableLogo.style.display = 'none'; 
         }
