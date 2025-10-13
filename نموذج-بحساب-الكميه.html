@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج استلام فرش</title>
+    <style>
+        /* أنماط اللودر (شاشة التحميل) */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader-logo {
+            font-size: 3em;
+            font-weight: bold;
+            color: #0056b3;
+            animation: pulse 1.5s infinite alternate;
+            position: relative;
+        }
+
+        .loader-logo::after {
+            content: "Sigma";
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: #f44336;
+            clip-path: inset(0 50% 0 0);
+        }
+
+        @keyframes pulse {
+            from { transform: scale(0.9); opacity: 0.7; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* الأنماط العامة للصفحة */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* أنماط الطباعة */
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+            }
+            /* إخفاء أزرار التحكم وعمود الحذف عند الطباعة */
+            .controls, #print-button, #logo-upload-button, .delete-column, .save-button {
+                display: none !important;
+            }
+            /* إظهار الشعار في الطباعة فقط */
+            .logo-placeholder.printable {
+                display: block !important;
+                border: none !important; /* إزالة الحدود عند الطباعة */
+                background-color: transparent !important;
+            }
+            /* إخفاء زر تحميل الشعار في الطباعة */
+            #logo-control {
+                display: none !important;
+            }
+            /* التأكد من أن العنوان في المنتصف في الطباعة */
+            .header {
+                justify-content: center;
+            }
+            .header > div:last-child {
+                display: none; /* إخفاء العنصر الفارغ في الطباعة */
+            }
+        }
+
+        /* رأس النموذج والشعار */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+        }
+
+        .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        #logo-control {
+            border: 1px dashed #999;
+            order: 1; /* الشعار على اليمين في rtl */
+            text-align: center;
+            line-height: 100px;
+            font-size: 12px;
+        }
+
+        .main-title {
+            color: #0056b3;
+            font-size: 28px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+            order: 2;
+        }
+
+        /* معلومات أساسية */
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        #total-received {
+            font-weight: bold;
+            color: darkred;
+        }
+
+        /* جدول البيانات */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; color: #333; }
+        td[contenteditable="true"]:focus, span[contenteditable="true"]:focus { outline: 2px solid #0056b3; }
+
+        .delete-btn { background-color: #f44336; color: white; border: none; padding: 5px 10px; font-size: 12px; cursor: pointer; border-radius: 3px; }
+        .delete-btn:hover { background-color: #da190b; }
+
+        /* قسم التوقيعات */
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 40px;
+            border-top: 1px dashed #ccc;
+            padding-top: 20px;
+        }
+        .signature-box {
+            flex-basis: 40%;
+            text-align: center;
+            font-size: 14px;
+        }
+        .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 180px; }
+        .role-name {
+             font-weight: bold; 
+             cursor: text; /* للدلالة على أنه قابل للتعديل */
+        }
+
+        /* عناصر التحكم */
+        .controls { text-align: center; margin-top: 30px; padding: 15px; background-color: #eee; border: 1px solid #ddd; border-radius: 5px; }
+        .controls button { background-color: #0056b3; color: white; border: none; padding: 10px 20px; font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 4px; }
+        .controls button.save-button { background-color: #28a745; }
+        .controls button.save-button:hover { background-color: #1e7e34; }
+        .controls button:hover { background-color: #004494; }
+    </style>
+</head>
+<body onload="hideLoader()">
+
+    <div id="loader" class="loader-container">
+        <div class="loader-logo">Sigma</div>
+    </div>
+
+    <div class="container">
+
+        <div class="header">
+            <div id="logo-control" class="logo-placeholder">
+                <button id="logo-upload-button" title="اضغط لتحميل شعار الشركة" style="all: unset; cursor: pointer; display: block; height: 100%; width: 100%; line-height: 100px; font-size: 12px; color: #333;">تحميل شعار</button>
+            </div>
+            <div class="logo-placeholder printable" id="printable-logo"></div>
+            
+            <h1 class="main-title" contenteditable="true">نموذج استلام فرش</h1>
+            <div style="width: 100px; height: 100px; order: 3;"></div>
+        </div>
+
+        <div class="info-section">
+            <div>
+                التاريخ: <span contenteditable="true" id="current-date">DD / MM / YYYY</span>
+            </div>
+            <div>
+                رقم النموذج: <span contenteditable="true">#</span>
+            </div>
+            <div>
+                **إجمالي الكمية المسلمة:** <span id="total-received">0</span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>م</th>
+                    <th>الموديل</th>
+                    <th>اللون</th>
+                    <th>الكمية المسلمة (رقم)</th>
+                    <th>اسم المفصل (العامل)</th>
+                    <th>توقيع المفصل</th>
+                    <th class="delete-column">حذف</th>
+                </tr>
+            </thead>
+            <tbody id="materials-table-body">
+                <tr>
+                    <td contenteditable="true" class="serial-number">1</td>
+                    <td contenteditable="true">موديل X10</td>
+                    <td contenteditable="true">أزرق داكن</td>
+                    <td contenteditable="true" class="quantity-input" oninput="calculateTotal()">50</td>
+                    <td contenteditable="true">اسم العامل الأول</td>
+                    <td></td>
+                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="signatures">
+            
+            <div class="signature-box">
+                <span class="role-name" contenteditable="true">مسؤول الطباعة</span>
+                <div class="signature-line"></div>
+                الاسم: <span contenteditable="true">اسم مسؤول الطباعة</span>
+            </div>
+            <div class="signature-box">
+                <span class="role-name" contenteditable="true">مسؤول الضم (استلام الإنتاج)</span>
+                <div class="signature-line"></div>
+                الاسم: <span contenteditable="true">اسم مسؤول الضم</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button id="add-row-button">إضافة صف جديد للفرش</button>
+        <button class="save-button" onclick="confirmAndPrintPreparation()">حفظ وتأكيد الإجمالي قبل الطباعة</button>
+        <button onclick="window.print()" id="print-button" disabled>طباعة النموذج</button>
+    </div>
+
+    <script>
+        let isConfirmed = false;
+        // تم تحديث اسم الملف إلى jpeg
+        const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg'; 
+
+        // دالة لإخفاء اللودر
+        function hideLoader() {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.visibility = 'hidden';
+                calculateTotal();
+            }, 500);
+        }
+
+        // دالة لتعيين الشعار الافتراضي
+        function setDefaultLogo() {
+            const logoControl = document.getElementById('logo-control');
+            const printableLogo = document.getElementById('printable-logo');
+            
+            logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+            logoControl.style.border = 'none';
+            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; // تغيير نص الزر
+            
+            // تعيين الشعار في مكانه المخصص للطباعة
+            printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
+
+            // التأكد من أن مكان التحكم غير مرئي ويتم عرض الشعار في الطباعة
+            logoControl.style.display = 'block'; 
+            printableLogo.style.display = 'none'; 
+        }
+
+        // دالة لحساب الإجمالي التلقائي
+        function calculateTotal() {
+            const quantityInputs = document.querySelectorAll('.quantity-input');
+            let total = 0;
+            quantityInputs.forEach(input => {
+                const quantity = parseFloat(input.textContent.trim().replace(/[^\d.]/g, '')) || 0;
+                total += quantity;
+            });
+            document.getElementById('total-received').textContent = total.toLocaleString('ar-EG', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+            
+            if (isConfirmed) {
+                isConfirmed = false;
+                document.getElementById('print-button').disabled = true;
+                document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
+            }
+        }
+        
+        // دالة للحفظ والتأكيد قبل الطباعة
+        function confirmAndPrintPreparation() {
+            calculateTotal();
+            isConfirmed = true;
+            document.getElementById('print-button').disabled = false;
+            document.getElementById('print-button').textContent = 'طباعة النموذج';
+            alert(`✅ تم حفظ الإجمالي وتأكيده: ${document.getElementById('total-received').textContent}. يمكنك الآن الطباعة.`);
+        }
+
+        // دالة لإعادة ترقيم الصفوف بعد الحذف أو الإضافة
+        function renumberRows() {
+            const serialNumbers = document.querySelectorAll('.serial-number');
+            serialNumbers.forEach((cell, index) => {
+                cell.textContent = index + 1;
+            });
+        }
+
+        // دالة لحذف صف من الجدول
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+            renumberRows();
+            calculateTotal();
+        }
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            setDefaultLogo(); // تعيين الشعار الافتراضي
+            
+            // تهيئة التاريخ
+            const dateSpan = document.getElementById('current-date');
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            dateSpan.textContent = `${day} / ${month} / ${year}`;
+            
+            // دالة إضافة صف جديد
+            document.getElementById('add-row-button').addEventListener('click', () => {
+                const tableBody = document.getElementById('materials-table-body');
+                const rowCount = tableBody.rows.length;
+                const newRow = tableBody.insertRow();
+                
+                const newIndex = rowCount + 1;
+
+                newRow.innerHTML = `
+                    <td contenteditable="true" class="serial-number">${newIndex}</td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true" class="quantity-input" oninput="calculateTotal()">0</td>
+                    <td contenteditable="true"></td>
+                    <td></td>
+                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
+                `;
+                calculateTotal(); 
+                renumberRows();
+            });
+
+            // دالة تحميل شعار جديد
+            document.getElementById('logo-upload-button').addEventListener('click', () => {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const base64Image = event.target.result;
+                            const logoControl = document.getElementById('logo-control');
+                            const printableLogo = document.getElementById('printable-logo');
+                            
+                            // تعيين الشعار الجديد في مكاني العرض والطباعة
+                            logoControl.style.backgroundImage = `url(${base64Image})`;
+                            printableLogo.style.backgroundImage = `url(${base64Image})`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                };
+                fileInput.click();
+            });
+
+            // تعطيل زر الطباعة بشكل مبدئي
+            document.getElementById('print-button').disabled = true;
+            document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
+        });
+    </script>
+
+</body>
+</html>
