@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج استلام فرش</title>
+    <title>الصفحة الرئيسية | نماذج Sigma</title>
     <style>
-        /* أنماط اللودر (شاشة التحميل) */
+        /* أنماط اللودر (شاشة التحميل) - مأخوذة من الكود الأصلي */
         .loader-container {
             position: fixed;
             top: 0;
@@ -42,562 +42,147 @@
             to { transform: scale(1.1); opacity: 1; }
         }
 
-        /* أنماط رسالة التأكيد المخصصة */
-        #confirmation-message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #28a745; 
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            font-size: 16px;
-            font-weight: bold;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0.5s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        #confirmation-message.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* الأنماط العامة للصفحة */
+        /* الأنماط العامة للصفحة الرئيسية */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f4f4f4;
             color: #333;
-            font-size: 16px; 
-        }
-
-        .container {
-            max-width: 900px;
-            min-width: 300px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-        }
-
-        /* أنماط أزرار التنقل */
-        #funde-link-container {
-            text-align: right;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            flex-wrap: wrap; 
-        }
-
-        #funde-link-container .nav-button {
-            display: inline-block;
-            background-color: #f44336; 
-            color: white;
-            padding: 8px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            white-space: nowrap; 
-        }
-        
-        #funde-link-container a:nth-child(1) { background-color: #28a745; }
-        #funde-link-container a:nth-child(2) { background-color: #dc3545; }
-        #funde-link-container a:nth-child(3) { background-color: #007bff; }
-        #funde-link-container a:nth-child(4) { background-color: #ffc107; color: #333; }
-        
-        #funde-link-container .nav-button:hover {
-            opacity: 0.9;
-        }
-
-
-        /* أنماط الطباعة النهائية (الأهم) */
-        @media print {
-            /* إعدادات الطباعة الأساسية لضمان أفضل تنسيق على A4 */
-            @page {
-                size: A4 portrait; /* الوضع العمودي */
-                margin: 1cm;
-            }
-            /* إخفاء شريط التمرير وكل العناصر غير الضرورية */
-            body, .container {
-                overflow: hidden !important; 
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .container {
-                box-shadow: none !important;
-                border: none !important;
-                width: 100%; 
-                max-width: 100%;
-            }
-            .table-wrapper {
-                overflow: visible !important;
-            }
-            /* إخفاء جميع عناصر التحكم غير الضرورية */
-            .controls, #logo-control, .delete-column, .save-button, #confirmation-message, #developer-info, #funde-link-container {
-                display: none !important;
-            }
-            /* إظهار الشعار المخصص للطباعة */
-            .logo-placeholder.printable {
-                display: block !important;
-            }
-            .header {
-                border-bottom: 3px solid #0056b3 !important;
-                justify-content: space-between;
-            }
-            .header > div:last-child {
-                display: none;
-            }
-            .main-title::before {
-                content: "";
-            }
-            .main-title {
-                white-space: nowrap;
-            }
-            
-            /* تنسيق الجدول للطباعة */
-            table {
-                width: 100% !important;
-                min-width: 100% !important;
-                table-layout: fixed; 
-            }
-            th, td {
-                padding: 3px 1px; /* تصغير البادينغ ليتسع المحتوى */
-                font-size: 10px; /* تصغير الخط أكثر */
-                white-space: normal;
-                word-wrap: break-word; 
-            }
-            /* تحديد عروض الأعمدة لضمان التناسب في الطباعة (8 أعمدة) */
-            td:nth-child(1), th:nth-child(1) { width: 3%; } /* م */
-            td:nth-child(2), th:nth-child(2) { width: 15%; } /* الموديل */
-            td:nth-child(3), th:nth-child(3) { width: 8%; } /* المقاس */
-            td:nth-child(4), th:nth-child(4) { width: 10%; } /* اللون */
-            td:nth-child(5), th:nth-child(5) { width: 13%; } /* تواب الفرش (الجديد) */
-            td:nth-child(6), th:nth-child(6) { width: 15%; } /* الكمية المسلمة */
-            td:nth-child(7), th:nth-child(7) { width: 20%; } /* اسم المفصل */
-            td:nth-child(8), th:nth-child(8) { width: 16%; } /* توقيع المفصل */
-
-            /* تنسيق صف الإجمالي في الطباعة */
-            .total-row-container {
-                border-top: 2px solid #333 !important; 
-                padding-top: 10px !important; 
-                margin-top: 5px !important; 
-                text-align: right !important; 
-                font-size: 14px !important;
-                font-weight: bold !important;
-            }
-            
-            /* توقيعات النهاية */
-            .signature-box .signature-name-line {
-                 border-bottom: none !important;
-                 height: auto !important;
-            }
-        }
-        
-        /* رأس النموذج والشعار */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #0056b3;
-            padding-bottom: 10px;
-            flex-wrap: wrap;
-        }
-
-        .logo-placeholder {
-            width: 80px;
-            height: 80px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            flex-shrink: 0;
-        }
-        
-        #logo-control {
-            border: 1px dashed #999;
-            order: 1; 
             text-align: center;
-            line-height: 80px;
-            font-size: 12px;
         }
 
-        .logo-placeholder.printable {
-            display: none;
-            order: 1;
+        .header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px 0;
+            border-bottom: 5px solid #004085;
+            margin-bottom: 40px;
         }
 
         .main-title {
-            color: #0056b3;
-            font-size: 26px;
-            font-weight: bold;
-            flex-grow: 1;
-            text-align: center;
-            order: 2;
-            padding: 0 10px;
-        }
-        .main-title[contenteditable="true"]::before {
-            content: "نموذج "; 
-            color: #0056b3;
+            font-size: 32px;
+            margin: 0;
+            padding: 10px 0;
+            font-weight: 700;
         }
 
-        /* معلومات أساسية */
-        .info-section {
+        .logo-container {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            /* الشعار الافتراضي هنا */
+            background-image: url('logo-sigma.jpeg'); 
+        }
+
+        /* حاوية الروابط */
+        .links-container {
             display: flex;
-            justify-content: flex-start; 
-            gap: 50px; 
-            margin-bottom: 20px;
-            font-size: 15px;
-            flex-wrap: wrap; 
-        }
-        .info-section div {
-             min-width: 150px;
-             margin: 5px 0;
-        }
-
-        /* جدول البيانات */
-        .table-wrapper {
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            min-width: 800px; /* تم زيادة العرض ليتناسب مع العمود الجديد */
-            border-collapse: collapse; 
-            margin-bottom: 10px; 
-            font-size: 14px;
-        }
-        th, td { border: 1px solid #ddd; padding: 6px; text-align: center; }
-        th { background-color: #f2f2f2; color: #333; }
-        td[contenteditable="true"]:focus, span[contenteditable="true"]:focus { outline: 2px solid #0056b3; }
-
-        .delete-btn { background-color: #f44336; color: white; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; border-radius: 3px; }
-
-        /* صف الإجمالي */
-        .total-row-container {
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-            margin-bottom: 20px;
-            text-align: right; 
-        }
-        .total-row {
-            font-size: 16px;
-            font-weight: bold;
-            display: inline-block; 
-            background-color: #e9e9e9;
-            padding: 8px 15px;
-            border-radius: 4px;
-        }
-
-
-        /* قسم التوقيعات */
-        .signatures {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
-            border-top: 1px dashed #ccc;
-            padding-top: 15px;
+            justify-content: center;
+            align-items: stretch; /* لجعل البطاقات بنفس الارتفاع */
             flex-wrap: wrap;
-        }
-        .signature-box {
-            flex-basis: 45%;
-            margin: 10px 0;
-            text-align: center;
-            font-size: 13px;
-        }
-        .signature-line { height: 1px; background-color: #333; margin: 10px auto 5px; width: 150px; }
-        .role-name { font-weight: bold; cursor: text; }
-        .signature-name-line { 
-            height: 1px; 
-            border-bottom: 1px dotted #333; 
-            margin: 5px auto 0; 
-            width: 180px; 
-            min-height: 15px; 
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        /* عناصر التحكم */
-        .controls { text-align: center; margin-top: 20px; padding: 10px; }
-        .controls button { 
-            background-color: #0056b3; color: white; border: none; padding: 8px 15px; 
-            font-size: 14px; margin: 4px 2px; cursor: pointer; border-radius: 4px;
-            flex-grow: 1;
-        }
-        .controls button.save-button { background-color: #28a745; }
-        
-        /* معلومات المطور */
-        #developer-info {
+        /* نمط بطاقة الرابط */
+        .nav-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 300px;
+            min-height: 150px;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             text-align: center;
-            font-size: 10px;
-            color: #999;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px dashed #ccc;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #0056b3;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #0056b3;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 20px;
+            display: block;
+            flex-grow: 1; /* لتأخذ كل المساحة المتاحة */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-link:hover {
+            background-color: #e6f0ff;
         }
     </style>
 </head>
 <body onload="hideLoader()">
-    <div id="funde-link-container">
-        <a href="نموذج-استلام-الفوندي-المجهز-للحقن.html" target="_blank" class="nav-button"> نموذج استلام الفوندي المجهز للحقن</a>
-        <a href="نموذج-اخطاء-بالتصنيع.html" target="_blank" class="nav-button"> نموذج أخطاء بالتصنيع</a>
-        <a href="نموذج-استلام-فوندي.html" target="_blank" class="nav-button">نموذج استلام الفوندي</a>
-        <a href="نموذج-وش-الفوندي-مكنجي-كبسون.html" target="_blank" class="nav-button"> نموذج وش الفوندي مكنجي أو كبسون</a>
-    </div>
-
     <div id="loader" class="loader-container">
         <div class="loader-logo">Sigma</div>
     </div>
-    
-    <div id="confirmation-message">
-        <span id="message-icon">✅</span> 
-        <span id="message-text"></span>
+
+    <div class="header">
+        <div class="logo-container"></div>
+        <h1 class="main-title">الصفحة الرئيسية | نظام النماذج</h1>
+        <p>اختر النموذج الذي تريد العمل عليه</p>
     </div>
 
-    <div class="container">
-
-        <div class="header">
-            <div id="logo-control" class="logo-placeholder">
-                <button id="logo-upload-button" title="اضغط لتحميل شعار الشركة" style="all: unset; cursor: pointer; display: block; height: 100%; width: 100%; line-height: 80px; font-size: 12px; color: #333;">تحميل شعار</button>
-            </div>
-            <div class="logo-placeholder printable" id="printable-logo"></div>
-            
-            <h1 class="main-title" contenteditable="true">استلام فرش</h1>
-            <div style="width: 80px; height: 80px; order: 3; flex-shrink: 0;"></div>
-        </div>
-
-        <div class="info-section">
-            <div>
-                التاريخ: <span contenteditable="true" id="current-date">DD / MM / YYYY</span>
-            </div>
-        </div>
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>م</th>
-                        <th>تواب الفرش</th>
-                        <th>الموديل</th>
-                        <th>المقاس</th> 
-                        <th>اللون</th>
-                         <th>الكمية المسلمة (رقم)</th>
-                        <th>اسم المفصل (العامل)</th>
-                        <th>توقيع المفصل</th>
-                        <th class="delete-column">حذف</th>
-                    </tr>
-                </thead>
-                <tbody id="materials-table-body">
-                    </tbody>
-            </table>
-        </div>
+    <div class="links-container">
         
-        <div class="total-row-container">
-            <div class="total-row">
-                إجمالي عدد الطرايح فقط
-            </div>
+        <div class="nav-card">
+            <a href="استلام-فرش.html" target="_blank" class="nav-link">
+                نموذج استلام الفرش
+            </a>
         </div>
 
-        <div class="signatures">
-            
-            <div class="signature-box">
-                <span class="role-name" contenteditable="true">مسؤول الطباعة</span>
-                <div class="signature-line"></div>
-                <div class="signature-name-line"></div>
-            </div>
-            
-            <div class="signature-box">
-                <span class="role-name" contenteditable="true">مسؤول الضم (استلام الإنتاج)</span>
-                <div class="signature-line"></div>
-                <div class="signature-name-line"></div>
-            </div>
+        <div class="nav-card">
+            <a href="نموذج-اخطاء-بالتصنيع.html" target="_blank" class="nav-link">
+                نموذج أخطاء بالتصنيع
+            </a>
         </div>
 
-    </div>
+        <div class="nav-card">
+            <a href="نموذج-استلام-الفوندي-المجهز-للحقن.html" target="_blank" class="nav-link">
+                نموذج استلام الفوندي المجهز للحقن
+            </a>
+        </div>
 
-    <div class="controls">
-        <button id="add-row-button">إضافة صف جديد للفرش</button>
-        <button class="save-button" onclick="confirmAndPrintPreparation()">تأكيد البيانات قبل الطباعة</button>
-        <button onclick="window.print()" id="print-button" disabled>طباعة النموذج</button>
-    </div>
+        <div class="nav-card">
+            <a href="نموذج-استلام-فوندي.html" target="_blank" class="nav-link">
+                نموذج استلام فوندي
+            </a>
+        </div>
 
-    <div id="developer-info">
-        Made by Mahmoud Hamed | Copyright © 2025
+        <div class="nav-card">
+            <a href="نموذج-وش-الفوندي-مكنجي-كبسون.html" target="_blank" class="nav-link">
+                نموذج وش الفوندي (مكنجي أو كبسون)
+            </a>
+        </div>
     </div>
 
     <script>
-        let isConfirmed = false;
-        const DEFAULT_LOGO_PATH = 'logo-sigma.jpeg'; 
-        const DEFAULT_ROW_COUNT = 10;
-        let loaderTimeout;
-
-        // دالة لإخفاء اللودر عند تحميل الصفحة
+        // دالة إخفاء اللودر عند تحميل الصفحة (مأخوذة من الكود الأصلي)
         function hideLoader() {
             const loader = document.getElementById('loader');
             loader.style.opacity = '0';
             setTimeout(() => {
                 loader.style.visibility = 'hidden';
-                initializeTableRows(); 
             }, 500);
         }
-
-        // دالة لتهيئة 10 صفوف فارغة
-        function initializeTableRows() {
-            const tableBody = document.getElementById('materials-table-body');
-            tableBody.innerHTML = ''; 
-            for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
-                const newRow = tableBody.insertRow();
-                newRow.innerHTML = `
-                    <td contenteditable="true" class="serial-number">${i + 1}</td>
-                    <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true" class="quantity-input"></td> <td contenteditable="true"></td> <td></td> <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
-                `;
-            }
-        }
-
-        // دالة لإظهار رسالة التأكيد المخصصة
-        function showConfirmationMessage(message) {
-            const messageElement = document.getElementById('confirmation-message');
-            document.getElementById('message-text').textContent = message;
-            messageElement.classList.add('show');
-            
-            setTimeout(() => {
-                messageElement.classList.remove('show');
-            }, 3000);
-        }
-
-        // دالة لتعيين الشعار الافتراضي
-        function setDefaultLogo() {
-            const logoControl = document.getElementById('logo-control');
-            const printableLogo = document.getElementById('printable-logo');
-            
-            logoControl.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
-            logoControl.style.border = 'none';
-            document.getElementById('logo-upload-button').textContent = 'تغيير الشعار'; 
-            
-            printableLogo.style.backgroundImage = `url(${DEFAULT_LOGO_PATH})`;
-
-            logoControl.style.display = 'block'; 
-            printableLogo.style.display = 'none'; 
-        }
-
-        // دالة للحفظ والتأكيد قبل الطباعة
-        function confirmAndPrintPreparation() {
-            const loader = document.getElementById('loader');
-            
-            // 1. إظهار لودر Sigma للتأكيد
-            loader.style.visibility = 'visible';
-            loader.style.opacity = '1';
-
-            // محاكاة عملية التأكيد (تأخير لمدة ثانية واحدة)
-            loaderTimeout = setTimeout(() => {
-                isConfirmed = true;
-                
-                // 2. تفعيل زر الطباعة
-                document.getElementById('print-button').disabled = false;
-                document.getElementById('print-button').textContent = 'طباعة النموذج';
-
-                // 3. إخفاء اللودر
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.visibility = 'hidden';
-                }, 500);
-
-                // 4. عرض رسالة التأكيد المخصصة
-                showConfirmationMessage(`تم تأكيد البيانات. يمكنك الآن الطباعة.`);
-                
-            }, 1000); 
-        }
-
-        // دالة لإعادة ترقيم الصفوف بعد الحذف أو الإضافة
-        function renumberRows() {
-            const serialNumbers = document.querySelectorAll('.serial-number');
-            serialNumbers.forEach((cell, index) => {
-                cell.textContent = index + 1;
-            });
-        }
-
-        // دالة لحذف صف من الجدول
-        function deleteRow(button) {
-            const row = button.closest('tr');
-            row.remove();
-            renumberRows();
-            
-            if (document.getElementById('materials-table-body').rows.length === 0) {
-                isConfirmed = false;
-                document.getElementById('print-button').disabled = true;
-                document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
-            }
-        }
-
-        // تهيئة الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            setDefaultLogo();
-            
-            // تهيئة التاريخ
-            const dateSpan = document.getElementById('current-date');
-            const today = new Date();
-            const day = String(today.getDate()).padStart(2, '0');
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const year = today.getFullYear();
-            dateSpan.textContent = `${day} / ${month} / ${year}`;
-            
-            // دالة إضافة صف جديد
-            document.getElementById('add-row-button').addEventListener('click', () => {
-                const tableBody = document.getElementById('materials-table-body');
-                const rowCount = tableBody.rows.length;
-                const newRow = tableBody.insertRow();
-                
-                const newIndex = rowCount + 1;
-
-                newRow.innerHTML = `
-                    <td contenteditable="true" class="serial-number">${newIndex}</td>
-                    <td contenteditable="true"></td> 
-                    <td contenteditable="true"></td> 
-                    <td contenteditable="true"></td> 
-                    <td contenteditable="true"></td> <td contenteditable="true" class="quantity-input"></td> 
-                    <td contenteditable="true"></td> 
-                    <td></td>
-                    <td class="delete-column"><button class="delete-btn" onclick="deleteRow(this)">حذف</button></td>
-                `;
-                renumberRows();
-            });
-
-            // دالة تحميل شعار جديد
-            document.getElementById('logo-upload-button').addEventListener('click', () => {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = 'image/*';
-                fileInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            const base64Image = event.target.result;
-                            const logoControl = document.getElementById('logo-control');
-                            const printableLogo = document.getElementById('printable-logo');
-                            
-                            logoControl.style.backgroundImage = `url(${base64Image})`;
-                            printableLogo.style.backgroundImage = `url(${base64Image})`;
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                };
-                fileInput.click();
-            });
-
-            // تعطيل زر الطباعة بشكل مبدئي
-            document.getElementById('print-button').disabled = true;
-            document.getElementById('print-button').textContent = 'يجب التأكيد أولاً للطباعة';
-        });
     </script>
-
 </body>
 </html>
